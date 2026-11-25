@@ -117,6 +117,27 @@ textarea{min-height:70px;resize:vertical}
 .spin{width:34px;height:34px;border:3px solid #D5DBE8;border-top-color:var(--navy);border-radius:50%;animation:sp 0.8s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
 .demo{background:#FFF7E6;color:#8A5A00;text-align:center;font-size:12px;padding:6px}
+
+/* A/S 접수 */
+nav .cnt{display:inline-block;min-width:18px;background:var(--wine);color:#fff;border-radius:999px;font-size:11px;padding:1px 6px;margin-left:4px}
+.badge.red{background:#FDE2E7;color:#B00020}
+.badge.navy{background:#E8EDF8;color:var(--navy)}
+.item .t .st{font-size:11px;font-weight:700;border-radius:6px;padding:2px 6px;margin-right:6px;vertical-align:2px}
+.st.s0{background:var(--warnbg);color:var(--warn)}.st.s1{background:#EAF2FF;color:#1D4ED8}.st.s2{background:var(--okbg);color:var(--ok)}
+.item.late{border-color:#F3B8C4;background:#FFF8FA}
+.kv{display:grid;grid-template-columns:96px 1fr auto;gap:0 10px;align-items:center;font-size:14px}
+.kv>div{padding:9px 0;border-bottom:1px solid #F0F1F4}
+.kv .k{color:var(--sub);font-size:13px}
+.kv .v{word-break:break-all;white-space:pre-wrap}
+.kv .a{text-align:right}
+.bad{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 14px}
+.pics{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.pics img{width:150px;height:150px;object-fit:cover;border-radius:10px;cursor:zoom-in;border:1px solid var(--line)}
+.danger{margin-top:22px;border:1px solid #F3C9D5;background:#FFF7F9;border-radius:12px;padding:14px}
+.danger b{color:var(--wine);font-size:13px}
+.btn.red{background:#B00020;color:#fff}
+#big{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:90;display:flex;align-items:center;justify-content:center}
+#big img{max-width:96vw;max-height:92vh}
 </style>
 </head>
 <body>
@@ -144,6 +165,7 @@ textarea{min-height:70px;resize:vertical}
     <nav>
       <button id="tabNew" class="on" onclick="tab('new')">신규 등록</button>
       <button id="tabList" onclick="tab('list')">현장 목록</button>
+      <button id="tabAS" onclick="tab('as')">A/S 접수<span class="cnt hide" id="asCnt"></span></button>
     </nav>
   </header>
 
@@ -206,8 +228,51 @@ textarea{min-height:70px;resize:vertical}
       <div class="count" id="cnt"></div>
       <div class="list" id="list"></div>
     </div>
+    <!-- A/S 접수 -->
+    <div id="pAS" class="hide">
+      <div class="tools"><input id="aq" placeholder="접수번호 · 이름 · 휴대폰 뒤 4자리 · 주소 검색" oninput="renderAS()"><button class="btn ghost" onclick="loadAS()">새로고침</button></div>
+      <div class="chips" id="aChips">
+        <button class="chip on" data-f="open">미완료</button>
+        <button class="chip" data-f="접수">접수</button>
+        <button class="chip" data-f="상담중">상담중</button>
+        <button class="chip" data-f="완료">완료</button>
+        <button class="chip" data-f="late">처리 지연</button>
+        <button class="chip" data-f="purge">보관기간 지남</button>
+        <button class="chip" data-f="all">전체</button>
+      </div>
+      <div class="count" id="aCnt"></div>
+      <div class="list" id="aList"></div>
+    </div>
   </main>
 </section>
+
+<!-- ───────── A/S 상세 ───────── -->
+<div id="mAS" class="modal hide" onclick="if(event.target===this)closeM('mAS')">
+  <div class="sheet">
+    <div style="display:flex;align-items:flex-start;gap:10px"><div style="flex:1"><h2 id="aTitle"></h2><div class="sub" id="aSub"></div></div><button class="btn ghost sm" onclick="closeM('mAS')">닫기</button></div>
+    <div class="bad" id="aBad"></div>
+    <div class="sec">처리 상태</div>
+    <div class="seg" id="aSeg"><button type="button" data-v="접수">접수</button><button type="button" data-v="상담중">상담중</button><button type="button" data-v="완료">완료</button></div>
+    <div class="note">처음 '상담중'으로 바꾸는 직원이 담당자로 기록됩니다.</div>
+    <div class="sec">접수 내용</div>
+    <div class="kv" id="aKV"></div>
+    <div class="sec">사진</div>
+    <div id="aPicBox"></div>
+    <div class="sec">메모 <span class="hint" style="font-weight:400;color:var(--sub)">사내용</span></div>
+    <textarea id="aMemo" placeholder="상담 내용, 방문 일정 등"></textarea>
+    <div class="actions" style="margin-top:10px"><button class="btn navy" onclick="saveMemo()">메모 저장</button></div>
+    <div class="danger hide" id="aDanger">
+      <b>관리 전용</b>
+      <div class="f" style="margin-top:8px"><label>사유<span class="req">*</span></label><input id="aReason" placeholder="예: 보관기간 1년 경과 / 장난 접수"></div>
+      <div class="actions" style="margin-top:10px">
+        <button class="btn ghost" onclick="asDanger('block')">이 계정 차단</button>
+        <button class="btn red" id="aDelBtn" onclick="asDanger('delete')">접수 삭제</button>
+      </div>
+      <div class="note">삭제하면 장부의 줄과 드라이브 자료(접수증·사진)가 함께 휴지통으로 이동합니다. 기록에는 접수번호와 사유만 남습니다.</div>
+    </div>
+  </div>
+</div>
+<div id="big" class="hide" onclick="this.classList.add('hide')"><img id="bigImg" alt=""></div>
 
 <!-- ───────── 수정 창 ───────── -->
 <div id="mEdit" class="modal hide" onclick="if(event.target===this)closeM('mEdit')">
@@ -262,13 +327,15 @@ textarea{min-height:70px;resize:vertical}
 /* ═════════ 설정 — 이 두 줄만 바꾸면 됩니다 ═════════ */
 const CONFIG = {
   CLIENT_ID: '431904821493-g9pbhlv4r2g4npgtevcitahfhst5k6ig.apps.googleusercontent.com',
+  KAKAO_KEY: '84c75bb776bce7a6229e29cc8aeb24b3',
   API_URL:   'https://script.google.com/macros/s/AKfycbzw9s5BuFBlr0BNDZ_ksivJure4V3iRY3bwqDEehn66iRNnnfN3IpyLZ87ZU9RHMrj7/exec',
 };
 /* ══════════════════════════════════════════════════ */
 
 const DEMO = /[?&]demo/.test(location.search);
 const LOCKED_DEFAULT = ['수주코드','발주처','계약금액','도로명주소','동','호'];
-const S = { token:null, user:null, buyers:[], channels:[], types:[], rows:[], locked:LOCKED_DEFAULT, filter:'all', editing:null };
+const S = { token:null, user:null, buyers:[], channels:[], types:[], rows:[], locked:LOCKED_DEFAULT, filter:'all', editing:null,
+  as:[], aFilter:'open', asCur:null, reqKind:'rec', delArm:false };
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
@@ -299,6 +366,8 @@ async function start(){
   $('#selTypes').innerHTML = '<option value="">선택</option>' + S.types.map(t => `<option>${esc(t)}</option>`).join('');
   $('#login').classList.add('hide'); $('#app').classList.remove('hide');
   renderList();
+  fillCoords(r.missing);
+  loadAS(true);
 }
 function logout(){
   sessionStorage.removeItem('ade_tok'); S.token = null;
@@ -332,13 +401,53 @@ async function api(payload, quiet){
   } finally { busy(false); }
 }
 
+/* ───── 지도 위치 자동 정리 (좌표 없는 주소 → 카카오맵으로 찾아 저장) ───── */
+let kakaoReady = null;
+function loadKakao(){
+  if (kakaoReady) return kakaoReady;
+  kakaoReady = new Promise((ok, no) => {
+    const s = document.createElement('script');
+    s.src = 'https://dapi.kakao.com/v2/maps/sdk.js?autoload=false&libraries=services&appkey=' + CONFIG.KAKAO_KEY;
+    s.onload = () => kakao.maps.load(ok);
+    s.onerror = () => { kakaoReady = null; no(new Error('카카오맵을 불러오지 못했습니다')); };
+    document.head.appendChild(s);
+  });
+  return kakaoReady;
+}
+let coordsBusy = false;
+async function fillCoords(list){
+  if (DEMO || coordsBusy || !list || !list.length) return;
+  coordsBusy = true;
+  try {
+    await loadKakao();
+    const geocoder = new kakao.maps.services.Geocoder();
+    const find = a => new Promise(res => geocoder.addressSearch(a, (r, st) =>
+      res(st === kakao.maps.services.Status.OK && r[0] ? { addr: a, lat: +r[0].y, lng: +r[0].x } : null)));
+    const found = [];
+    for (let i = 0; i < list.length; i += 8) {
+      const part = await Promise.all(list.slice(i, i + 8).map(find));
+      found.push(...part.filter(Boolean));
+    }
+    for (let i = 0; i < found.length; i += 100) {
+      const res = await fetch(CONFIG.API_URL, { method:'POST', body: JSON.stringify({ action:'coords', items: found.slice(i, i + 100), idToken: S.token }) });
+      await res.json();
+    }
+    if (found.length) toast(`지도 위치 ${found.length}곳 정리 완료`);
+    if (found.length < list.length) console.warn('지도 위치를 찾지 못한 주소:', list.filter(a => !found.some(f => f.addr === a)));
+  } catch (e) { console.warn(e); }
+  finally { coordsBusy = false; }
+}
+
 /* ───── 탭 ───── */
 function tab(t){
   $('#pNew').classList.toggle('hide', t !== 'new');
   $('#pList').classList.toggle('hide', t !== 'list');
+  $('#pAS').classList.toggle('hide', t !== 'as');
   $('#tabNew').classList.toggle('on', t === 'new');
   $('#tabList').classList.toggle('on', t === 'list');
+  $('#tabAS').classList.toggle('on', t === 'as');
   if (t === 'list') renderList();
+  if (t === 'as') loadAS();
   window.scrollTo(0, 0);
 }
 
@@ -384,6 +493,7 @@ async function submitNew(e){
   const r = await api({ action:'create', data:d });
   if (!r) return false;
   S.rows = r.rows;
+  fillCoords(r.missing);
   if (d['발주처'] && !S.buyers.includes(d['발주처'])) S.buyers.push(d['발주처']);
   fNew.reset(); resetNew();
   toast(r.message);
@@ -477,11 +587,13 @@ async function submitEdit(e){
   const res = await api({ action:'update', code:r['수주코드'], data:ch });
   if (!res) return false;
   S.rows = res.rows; closeM('mEdit'); renderList(); toast(res.message);
+  fillCoords(res.missing);
   return false;
 }
 
 /* ───── 수정 요청 ───── */
 function openReq(field){
+  S.reqKind = 'rec';
   const f = $('#fReq'), r = S.editing;
   f.reset();
   f.elements.field.value = field;
@@ -495,10 +607,136 @@ function openReq(field){
 async function submitReq(e){
   e.preventDefault();
   const f = $('#fReq');
+  if (S.reqKind === 'as') {
+    const res = await api({ action:'asRequest', no:S.asCur['접수번호'], field:f.elements.field.value, value:f.elements.value.value, reason:f.elements.reason.value });
+    if (!res) return false;
+    setAS(res.rows); closeM('mReq'); toast(res.message); openAS(S.asCur['접수번호']);
+    return false;
+  }
   const res = await api({ action:'request', code:S.editing['수주코드'], field:f.elements.field.value, value:f.elements.value.value, reason:f.elements.reason.value });
   if (!res) return false;
   closeM('mReq'); toast(res.message);
   return false;
+}
+
+/* ───── A/S 접수 ───── */
+const AS_EDIT = ['이름','연락처','도로명주소','건물명','동','호','증상','에러코드','증상설명','제품종류','설치시기','방문희망'];
+const AS_VIEW = [['시공경로'],['인테리어업체'],['이름'],['연락처'],['도로명주소'],['건물명'],['동'],['호'],['증상'],['에러코드'],['증상설명'],
+  ['제품종류'],['설치시기'],['방문희망'],['매칭수주코드'],['담당자'],['상담시작일시'],['완료일']];
+async function loadAS(quiet){
+  const r = await api({ action:'asList' }, quiet);
+  if (r) setAS(r.rows);
+}
+function setAS(rows){
+  S.as = rows || [];
+  const n = S.as.filter(x => x['처리상태'] === '접수').length;
+  $('#asCnt').textContent = n; $('#asCnt').classList.toggle('hide', !n);
+  renderAS();
+}
+$('#aChips').addEventListener('click', e => {
+  const b = e.target.closest('.chip'); if (!b) return;
+  S.aFilter = b.dataset.f;
+  document.querySelectorAll('#aChips .chip').forEach(c => c.classList.toggle('on', c === b));
+  renderAS();
+});
+const stCls = s => s === '완료' ? 's2' : s === '상담중' ? 's1' : 's0';
+function renderAS(){
+  const q = ($('#aq').value || '').replace(/\s+/g,'').toLowerCase();
+  const rows = S.as.filter(r => {
+    const st = r['처리상태'] || '접수';
+    if (S.aFilter === 'open' && st === '완료') return false;
+    if (['접수','상담중','완료'].includes(S.aFilter) && st !== S.aFilter) return false;
+    if (S.aFilter === 'late' && !r._지연) return false;
+    if (S.aFilter === 'purge' && !r._파기대상) return false;
+    if (!q) return true;
+    return ['접수번호','이름','도로명주소','건물명','인테리어업체'].some(k => String(r[k]||'').replace(/\s+/g,'').toLowerCase().includes(q))
+      || String(r['연락처']||'').replace(/\D/g,'').endsWith(q.replace(/\D/g,'') || '@');
+  });
+  $('#aCnt').textContent = `${rows.length}건`;
+  if (!rows.length) { $('#aList').innerHTML = '<div class="empty">조건에 맞는 접수가 없습니다.</div>'; return; }
+  $('#aList').innerHTML = rows.map(r => {
+    const st = r['처리상태'] || '접수';
+    const place = [r['건물명'] || String(r['도로명주소']||'').split(' ').slice(0,3).join(' '), r['동'] ? r['동'] + '동' : ''].filter(Boolean).join(' ');
+    const b = [];
+    if (r._지연) b.push('<span class="badge red">처리 지연</span>');
+    if (r._파기대상) b.push('<span class="badge red">보관기간 지남</span>');
+    b.push(`<span class="badge ${r._보증 === '설치 1년 이내' ? 'ok' : r._보증 === '설치 1년 경과' ? 'navy' : 'off'}">${esc(r._보증)}</span>`);
+    if (r._같은집) b.push('<span class="badge warn">같은 집 접수 중</span>');
+    if (r._이전AS) b.push(`<span class="badge blog">이전 A/S ${r._이전AS}건</span>`);
+    if (r._차단) b.push('<span class="badge red">차단 계정</span>');
+    const meta = [r['증상'], r['접수일시'], r['담당자'] ? '담당 ' + r['담당자'].split('@')[0] : ''].filter(Boolean).map(esc).join(' · ');
+    return `<div class="item ${r._지연 ? 'late' : ''}" onclick="openAS('${esc(r['접수번호'])}')">
+      <div class="t"><span class="st ${stCls(st)}">${esc(st)}</span><span class="code">${esc(r['접수번호'])}</span>${esc(place)}</div>
+      <div class="b">${b.join('')}</div>
+      <div class="m">${meta}</div></div>`;
+  }).join('');
+}
+function openAS(no){
+  const r = S.as.find(x => x['접수번호'] === no); if (!r) return closeM('mAS');
+  S.asCur = r; S.delArm = false;
+  const admin = S.user.role === '관리';
+  const st = r['처리상태'] || '접수';
+  $('#aTitle').textContent = `${r['접수번호']} · ${r['건물명'] || String(r['도로명주소']||'').split(' ').slice(0,3).join(' ')}`;
+  $('#aSub').textContent = `접수 ${r['접수일시']} · ${st}${r['담당자'] ? ' · 담당 ' + r['담당자'] : ''}`;
+  const b = [`<span class="badge ${r._보증 === '설치 1년 이내' ? 'ok' : r._보증 === '설치 1년 경과' ? 'navy' : 'off'}">${esc(r._보증)}</span>`];
+  if (r._지연) b.push('<span class="badge red">처리 지연 (영업일 하루 넘게 접수 상태)</span>');
+  if (r._같은집) b.push('<span class="badge warn">같은 집 다른 계정 접수 중</span>');
+  if (r._이전AS) b.push(`<span class="badge blog">같은 현장 이전 A/S ${r._이전AS}건</span>`);
+  if (r._파기대상) b.push('<span class="badge red">완료 후 1년 지남 — 삭제 대상</span>');
+  if (r._차단) b.push('<span class="badge red">차단된 계정</span>');
+  $('#aBad').innerHTML = b.join('');
+  $('#aSeg').querySelectorAll('button').forEach(x => x.classList.toggle('on', x.dataset.v === st));
+  $('#aKV').innerHTML = AS_VIEW.map(([k]) => {
+    let v = esc(r[k] || '');
+    if (k === '연락처' && r[k]) v = `<a href="tel:${esc(r[k])}">${v}</a>`;
+    const act = AS_EDIT.includes(k) ? `<button class="btn ghost sm" onclick="openASReq('${k}')">${admin ? '수정' : '수정 요청'}</button>` : '';
+    return `<div class="k">${k}</div><div class="v">${v || '<span style="color:#98A2B3">-</span>'}</div><div class="a">${act}</div>`;
+  }).join('');
+  const n = Number(r['사진수']) || 0;
+  $('#aPicBox').innerHTML = n ? `<button class="btn ghost sm" onclick="loadPics()">사진 ${n}장 보기</button><div class="pics" id="aPics"></div>` : '<div class="note">첨부 사진 없음</div>';
+  $('#aMemo').value = r['메모'] || '';
+  $('#aDanger').classList.toggle('hide', !admin);
+  $('#aReason').value = ''; $('#aDelBtn').textContent = '접수 삭제';
+  openM('mAS');
+}
+$('#aSeg').addEventListener('click', async e => {
+  const b = e.target.closest('button'); if (!b || !S.asCur) return;
+  if (b.dataset.v === (S.asCur['처리상태'] || '접수')) return;
+  const r = await api({ action:'asUpdate', no:S.asCur['접수번호'], field:'처리상태', value:b.dataset.v });
+  if (!r) return;
+  setAS(r.rows); toast(r.message); openAS(S.asCur['접수번호']);
+});
+async function saveMemo(){
+  const r = await api({ action:'asUpdate', no:S.asCur['접수번호'], field:'메모', value:$('#aMemo').value });
+  if (!r) return;
+  setAS(r.rows); toast('메모 저장 완료'); openAS(S.asCur['접수번호']);
+}
+async function loadPics(){
+  const r = await api({ action:'asPhotos', no:S.asCur['접수번호'] });
+  if (!r) return;
+  $('#aPics').innerHTML = r.photos.length ? r.photos.map(p => `<img src="${p.data}" alt="${esc(p.name)}" onclick="bigPic(this.src)">`).join('') : '<div class="note">사진을 찾지 못했습니다.</div>';
+}
+function bigPic(src){ $('#bigImg').src = src; $('#big').classList.remove('hide'); }
+function openASReq(field){
+  S.reqKind = 'as';
+  const f = $('#fReq'), r = S.asCur;
+  f.reset();
+  f.elements.field.value = field;
+  f.elements.cur.value = r[field] ?? '';
+  const isAddr = field === '도로명주소';
+  f.elements.value.readOnly = isAddr;
+  f.elements.value.placeholder = isAddr ? '[주소 검색]을 누르세요' : '';
+  $('#rqAddr').classList.toggle('hide', !isAddr);
+  openM('mReq');
+}
+async function asDanger(kind){
+  const reason = $('#aReason').value.trim();
+  if (!reason) return toast('사유를 입력하세요.', true);
+  if (kind === 'delete' && !S.delArm) { S.delArm = true; $('#aDelBtn').textContent = '한 번 더 누르면 삭제'; return; }
+  const r = await api({ action: kind === 'delete' ? 'asDelete' : 'asBlock', no:S.asCur['접수번호'], reason });
+  if (!r) return;
+  setAS(r.rows); toast(r.message);
+  if (kind === 'delete') closeM('mAS'); else openAS(S.asCur['접수번호']);
 }
 
 /* ───── 주소 검색 (다음 우편번호) ───── */
@@ -588,6 +826,10 @@ const DEMO_ROWS = [
   {'수주코드':'26T071','수주채널':'오늘의집/LX','현장명(원본)':'한라프로방스 602동 503호','발주처':'공간담다','계약금액':'8320380','도로명주소':'경기도 용인시 수지구 죽전로 111','동':'602','호':'503','시공일':'','설치완료일':'','시공유형':'','설치제품':'','블로그링크':'','지도공개':'Y','공개현장명':'한라프로방스','내부메모':'','등록자':'기존자료 이관','등록일시':'','수정일시':'','지도상태':'지도 표시'},
   {'수주코드':'26T079','수주채널':'오늘의집/LX','현장명(원본)':'다이너스티힐 아파트 301호','발주처':'루멘디자인','계약금액':'13138200','도로명주소':'서울특별시 서초구 동광로27길 66','동':'','호':'301','시공일':'','설치완료일':'','시공유형':'','설치제품':'','블로그링크':'','지도공개':'N','공개현장명':'다이너스티힐 아파트','내부메모':'빌라·단일 건물 추정','등록자':'기존자료 이관','등록일시':'','수정일시':'','지도상태':'비공개'},
 ];
+const DEMO_AS = [
+  {'접수번호':'AS-261125-002','접수일시':'2026-11-25 15:10','처리상태':'접수','담당자':'','상담시작일시':'','완료일':'','시공경로':'오늘의집','인테리어업체':'스테이','이름':'박영희','연락처':'010-9876-5432','도로명주소':'서울특별시 성동구 금호로 107','건물명':'래미안 하이리버','동':'108','호':'1804','증상':'물이 새요','에러코드':'','증상설명':'안방 천장형 아래로 물이 떨어져요','제품종류':'천장형','설치시기':'1~2년','방문희망':'평일 오후','사진수':'2','매칭수주코드':'26T070','폴더링크':'','메모':'','동의버전':'AS_V1_20261125','_지연':false,'_같은집':true,'_이전AS':1,'_보증':'설치일 확인 필요','_파기대상':false,'_차단':false},
+  {'접수번호':'AS-261124-001','접수일시':'2026-11-24 10:02','처리상태':'접수','담당자':'','상담시작일시':'','완료일':'','시공경로':'오늘의집','인테리어업체':'공간담다','이름':'김민수','연락처':'010-1234-5678','도로명주소':'경기도 용인시 수지구 죽전로 111','건물명':'한라프로방스','동':'602','호':'503','증상':'냉방이 안 돼요, 에러코드가 떠요','에러코드':'CH05','증상설명':'','제품종류':'천장형','설치시기':'1년 이내','방문희망':'평일 오전','사진수':'0','매칭수주코드':'26T071','폴더링크':'','메모':'','동의버전':'AS_V1_20261125','_지연':true,'_같은집':false,'_이전AS':0,'_보증':'설치 1년 이내','_파기대상':false,'_차단':false},
+];
 async function demoApi(p){
   await new Promise(r => setTimeout(r, 250));
   if (p.action === 'init') return { ok:true, user:{ email:'staff@example.com', name:'김직원', role:'입력' },
@@ -604,6 +846,10 @@ async function demoApi(p){
     return { ok:true, message:p.code + ' 수정 완료 (데모)', rows:DEMO_ROWS };
   }
   if (p.action === 'request') return { ok:true, message:'수정 요청 접수 (데모) — 관리자 승인 후 반영됩니다.' };
+  if (p.action === 'asList') return { ok:true, rows:DEMO_AS };
+  if (p.action === 'asUpdate') { const r = DEMO_AS.find(x => x['접수번호'] === p.no); r[p.field] = p.value; if (p.value === '상담중' && !r['담당자']) r['담당자'] = 'staff@example.com'; return { ok:true, message:p.no + ' 저장 (데모)', rows:DEMO_AS }; }
+  if (p.action === 'asRequest') return { ok:true, message:'수정 요청 접수 (데모)', rows:DEMO_AS };
+  if (p.action === 'asPhotos') return { ok:true, photos:[] };
   return { ok:false, error:'알 수 없는 요청' };
 }
 if (DEMO) { $('#demoBar').classList.remove('hide'); start(); }

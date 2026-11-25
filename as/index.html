@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>A/S 접수 · (주)에이디이앤씨</title>
+<meta name="description" content="(주)에이디이앤씨에서 시공한 LG전자 시스템에어컨 A/S 온라인 접수">
+<meta property="og:title" content="A/S 접수 · (주)에이디이앤씨">
+<meta property="og:description" content="당사 시공 현장의 시스템에어컨 A/S를 온라인으로 접수하세요.">
+<meta name="referrer" content="no-referrer">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{--navy:#243A70;--wine:#A50034;--bg:#F4F5F7;--line:#DDE1E8;--txt:#1F2430;--sub:#667085;--kk:#FEE500}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--txt);font-family:Pretendard,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;-webkit-text-size-adjust:100%}
+button,input,textarea{font:inherit;color:inherit}
+.hide{display:none!important}
+header{background:var(--navy);color:#fff;padding:18px 18px 16px}
+.hin{max-width:560px;margin:0 auto;display:flex;align-items:flex-end;gap:10px}
+header small{display:block;font-size:12px;color:#C9D2E8}
+header h1{margin:3px 0 0;font-size:22px;letter-spacing:-.3px}
+.blog{margin-left:auto;background:rgba(255,255,255,.14);color:#fff;text-decoration:none;font-weight:700;font-size:13px;border-radius:9px;padding:8px 11px;white-space:nowrap}
+main{max-width:560px;margin:0 auto;padding:12px 12px 40px}
+.card{background:#fff;border-radius:14px;padding:16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(16,24,40,.06)}
+.lbl{font-size:14px;font-weight:800;color:var(--navy);margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.lbl small{color:var(--sub);font-weight:500;font-size:12.5px}
+.num{width:20px;height:20px;border-radius:50%;background:var(--navy);color:#fff;font-size:12px;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.seg{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{flex:1;border:none;background:#fff;padding:12px 6px;font-weight:700;color:var(--sub);cursor:pointer;font-size:14.5px}
+.seg button.on{background:var(--navy);color:#fff}
+.f{margin-top:10px}
+.f:first-child{margin-top:0}
+.f label{display:block;font-size:13px;font-weight:700;color:#344054;margin-bottom:6px}
+.f label em{font-style:normal;color:var(--wine);margin-left:2px}
+.f label small{font-weight:500;color:var(--sub);margin-left:4px}
+.in{width:100%;border:1px solid var(--line);border-radius:9px;background:#fff;padding:11px 12px;font-size:16px;outline:none}
+.in:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(36,58,112,.12)}
+.in[readonly]{background:#F8F9FB;cursor:pointer}
+textarea.in{height:76px;resize:none;font-size:15px}
+.row{display:flex;gap:8px}.row>*{flex:1;min-width:0}
+.btn2{flex:none;border:1.5px solid var(--navy);color:var(--navy);background:#fff;border-radius:9px;padding:10px 12px;font-weight:700;font-size:14px;white-space:nowrap;cursor:pointer}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:8px 12px;font-size:14px;font-weight:600;color:#475467;cursor:pointer}
+.chip.on{border-color:var(--navy);background:#F3F6FC;color:var(--navy)}
+.hint{font-size:12.5px;color:var(--sub);margin-top:6px;line-height:1.55}
+.open{border-left:3px solid var(--navy);padding-left:10px;margin-top:12px}
+.photos{display:flex;gap:8px;flex-wrap:wrap}
+.ph{width:84px;height:84px;border-radius:10px;border:1.5px dashed #B8C0D0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;color:var(--sub);gap:2px;cursor:pointer;position:relative;overflow:hidden}
+.ph img{width:100%;height:100%;object-fit:cover}
+.ph .x{position:absolute;top:4px;right:4px;background:rgba(0,0,0,.55);color:#fff;border:none;border-radius:50%;width:22px;height:22px;font-size:12px;cursor:pointer}
+.ph.busy::after{content:"";position:absolute;inset:0;background:rgba(255,255,255,.6)}
+.consent{background:#F8F9FB;border:1px solid var(--line);border-radius:10px;padding:11px 12px;font-size:12.5px;line-height:1.7;color:#475467}
+.consent b{color:#344054}
+.agree{display:flex;align-items:center;gap:9px;font-size:14px;font-weight:700;margin-top:10px;cursor:pointer}
+.agree input{width:20px;height:20px;accent-color:var(--wine);margin:0}
+.go{width:100%;border:none;background:var(--wine);color:#fff;font-weight:800;border-radius:12px;padding:15px;font-size:16px;cursor:pointer;margin:6px 0 4px}
+.err{color:var(--wine);font-size:13.5px;text-align:center;min-height:18px;line-height:1.5;margin-top:4px}
+.trap{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.center{text-align:center;padding:8px 6px 2px}
+.ico{width:64px;height:64px;border-radius:50%;margin:6px auto 12px;display:flex;align-items:center;justify-content:center}
+.center h2{margin:0;font-size:20px;letter-spacing:-.3px}
+.center p{font-size:14.5px;line-height:1.7;color:#475467;margin:10px 0 0}
+.center p b{color:#1F2430}
+.tips{font-size:13.5px;line-height:1.8;color:#344054;margin:0;padding-left:18px}
+.note{font-size:13.5px;line-height:1.65;color:#475467;margin:0 0 10px}
+.kk{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border:none;background:var(--kk);color:#191919;font-weight:800;border-radius:12px;padding:15px;font-size:16px;cursor:pointer;text-decoration:none}
+.ghost{display:block;width:100%;border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:13px;font-size:15px;font-weight:700;color:var(--navy);margin-top:8px;cursor:pointer;text-align:center;text-decoration:none}
+.lg{display:flex;gap:8px}
+.lg a{flex:1;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center;text-decoration:none;color:#1F2430}
+.lg small{display:block;font-size:12px;color:var(--sub)}
+.lg b{font-size:18px;letter-spacing:.3px}
+.sec{font-size:13px;font-weight:800;color:var(--navy);margin:16px 2px 8px}
+.rc{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(16,24,40,.08)}
+.rc .top{background:var(--navy);color:#fff;padding:16px;text-align:center}
+.rc .top small{color:#C9D2E8;font-size:12px}
+.rc .no{font-size:28px;font-weight:800;letter-spacing:.5px;margin-top:4px}
+.rc dl{margin:0;padding:6px 16px 12px}
+.rc dl div{display:flex;padding:9px 0;border-bottom:1px solid #F0F1F4;font-size:14px}
+.rc dl div:last-child{border:none}
+.rc dt{width:84px;color:var(--sub);flex:none}
+.rc dd{margin:0;font-weight:600;word-break:keep-all}
+.rc .foot{background:#F8F9FB;font-size:11.5px;color:var(--sub);padding:10px 16px;line-height:1.6}
+.steps{background:#fff;border-radius:14px;padding:12px 14px;margin:12px 0;box-shadow:0 1px 3px rgba(16,24,40,.06)}
+.steps div{display:flex;gap:9px;font-size:13.5px;line-height:1.6;color:#344054;padding:5px 0}
+.steps span{flex:none;width:20px;height:20px;border-radius:50%;background:var(--navy);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.steps p{margin:0}.steps b{color:#1F2430}
+.copied{text-align:center;font-size:13px;color:#12B76A;font-weight:600;margin-top:8px;min-height:18px}
+.notice{background:#FFF8E6;border:1px solid #F5D98B;border-radius:10px;padding:10px 12px;font-size:13px;line-height:1.6;color:#6B4E00;margin-bottom:10px}
+.login-card{text-align:center;padding:26px 18px}
+.login-card h2{margin:4px 0 8px;font-size:20px}
+.login-card p{font-size:14px;line-height:1.7;color:#475467;margin:0 0 16px}
+.flow{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin:0 0 18px}
+.flow span{background:#F3F6FC;color:var(--navy);font-size:12.5px;font-weight:700;border-radius:999px;padding:5px 10px}
+.small{font-size:12px;color:var(--sub);line-height:1.6;margin-top:12px}
+.foot-info{font-size:11.5px;color:#98A2B3;text-align:center;margin:14px 0 0;line-height:1.6}
+.modal{position:fixed;inset:0;background:rgba(16,24,40,.45);z-index:50;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:#fff;width:100%;max-width:560px;border-radius:18px 18px 0 0;padding:14px}
+#postWrap{height:470px;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+#busy{position:fixed;inset:0;background:rgba(255,255,255,.6);z-index:70;display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center;font-size:14px;color:#344054}
+.spin{width:34px;height:34px;border:3px solid #D5DBE8;border-top-color:var(--navy);border-radius:50%;animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.demo{background:#FFF7E6;color:#8A5A00;text-align:center;font-size:12px;padding:6px}
+</style>
+</head>
+<body>
+<div id="demoBar" class="demo hide">데모 화면입니다 — 실제로 접수되지 않습니다</div>
+<header><div class="hin">
+  <div><small>(주)에이디이앤씨 · LG전자 시스템에어컨 인증점</small><h1>A/S 접수</h1></div>
+  <a class="blog" href="https://blog.naver.com/air-design" target="_top">블로그</a>
+</div></header>
+
+<main>
+  <!-- 로그인 -->
+  <section id="sLogin" class="hide">
+    <div class="card login-card">
+      <div class="ico" style="background:#F3F6FC"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#243A70" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
+      <h2>당사 시공 현장 A/S 접수</h2>
+      <p>(주)에이디이앤씨에서 설치한 시스템에어컨의<br>A/S를 온라인으로 접수하실 수 있습니다.</p>
+      <div class="flow"><span>① 카카오 로그인</span><span>② 신청서 작성</span><span>③ 카카오톡으로 접수번호 전송</span></div>
+      <button class="kk" onclick="kakaoLogin()"><svg width="20" height="20" viewBox="0 0 24 24"><path fill="#191919" d="M12 3.5C6.8 3.5 2.6 6.8 2.6 10.9c0 2.6 1.7 4.9 4.3 6.2l-1 3.6c-.1.3.3.6.6.4l4.2-2.8c.4 0 .9.1 1.3.1 5.2 0 9.4-3.3 9.4-7.5S17.2 3.5 12 3.5z"/></svg>카카오로 시작하기</button>
+      <div class="err" id="loginErr"></div>
+      <div class="small">카카오 로그인은 장난 접수를 막고 접수 기록을 관리하기 위한 것입니다.<br>카카오 회원번호 외의 정보는 저장하지 않습니다.</div>
+    </div>
+  </section>
+
+  <!-- 신청서 -->
+  <section id="sForm" class="hide">
+    <div class="card">
+      <div class="lbl"><span class="num">1</span>시공 경로</div>
+      <div class="seg" id="route"><button type="button" data-v="오늘의집" class="on">오늘의집</button><button type="button" data-v="직접">에이디이앤씨 직접 계약</button></div>
+      <div class="open" id="partnerBox">
+        <div class="f"><label>인테리어 업체명<em>*</em></label>
+          <input class="in" id="partner" maxlength="40" placeholder="예: ○○디자인" autocomplete="off">
+          <div class="hint">공사를 맡았던 인테리어 업체 이름을 적어 주세요. 일부만 기억나셔도 괜찮습니다.</div></div>
+      </div>
+      <div class="open hide" id="directBox">
+        <p class="note" style="margin-top:4px">직접 계약 고객님은 카카오톡으로 문의해 주시면 담당자가 확인 후 안내해 드립니다.</p>
+        <a class="kk" href="#" onclick="return openKakao(false)"><svg width="20" height="20" viewBox="0 0 24 24"><path fill="#191919" d="M12 3.5C6.8 3.5 2.6 6.8 2.6 10.9c0 2.6 1.7 4.9 4.3 6.2l-1 3.6c-.1.3.3.6.6.4l4.2-2.8c.4 0 .9.1 1.3.1 5.2 0 9.4-3.3 9.4-7.5S17.2 3.5 12 3.5z"/></svg>카카오톡으로 문의하기</a>
+      </div>
+    </div>
+
+    <div id="formRest">
+      <div class="card">
+        <div class="lbl"><span class="num">2</span>설치 주소</div>
+        <div class="row"><input class="in" id="addr" readonly placeholder="[주소 찾기]를 눌러 주세요" onclick="openPost()"><button type="button" class="btn2" onclick="openPost()">주소 찾기</button></div>
+        <div class="row f"><input class="in" id="dong" maxlength="10" placeholder="동 (예: 101)"><input class="in" id="ho" maxlength="10" placeholder="호 (예: 1203)"></div>
+        <div class="hint">동·호가 없는 건물이면 비워 두세요.</div>
+      </div>
+
+      <div class="card">
+        <div class="lbl"><span class="num">3</span>연락받으실 분</div>
+        <div class="f"><label>이름<em>*</em></label><input class="in" id="name" maxlength="20" autocomplete="name"></div>
+        <div class="f"><label>휴대폰 번호<em>*</em><small>방문 일정 안내에만 사용합니다</small></label><input class="in" id="phone" inputmode="numeric" maxlength="13" placeholder="010-0000-0000" autocomplete="tel"></div>
+      </div>
+
+      <div class="card">
+        <div class="lbl"><span class="num">4</span>어떤 증상인가요?<small>여러 개 선택 가능</small></div>
+        <div class="chips" data-multi id="symptoms"></div>
+        <div class="f"><label>에러코드<small>선택</small></label><input class="in" id="code" maxlength="20" placeholder="예: CH05"></div>
+        <div class="f"><label>자세한 설명<small>선택</small></label><textarea class="in" id="desc" maxlength="500" placeholder="예: 거실 천장형만 바람이 미지근해요"></textarea></div>
+      </div>
+
+      <div class="card">
+        <div class="lbl"><span class="num">5</span>추가 정보<small>선택</small></div>
+        <div class="f"><label>제품 종류</label><div class="chips" id="product"></div></div>
+        <div class="f"><label>설치 시기</label><div class="chips" id="period"></div></div>
+        <div class="f"><label>방문 희망 시간</label><div class="chips" id="visit"></div></div>
+      </div>
+
+      <div class="card">
+        <div class="lbl"><span class="num">6</span>사진 첨부<small>선택 · 최대 3장</small></div>
+        <div class="photos" id="photos"></div>
+        <input type="file" id="file" accept="image/*" multiple class="hide">
+        <div class="hint">에러 화면, 물 새는 곳, 실외기 등을 찍어 주시면 확인이 빨라집니다.<br>얼굴·개인 서류가 나오지 않게 찍어 주세요.</div>
+      </div>
+
+      <div class="card">
+        <div class="consent"><b>[개인정보 수집·이용 동의 (필수)]</b><br>
+        · 수집 항목: 이름, 휴대폰 번호, 설치 주소(동·호), 증상 정보, 첨부 사진(선택), 카카오 회원번호, 접수 일시<br>
+        · 이용 목적: A/S 접수 및 당사 시공 여부 확인, 방문 일정 안내, 부정 접수 방지<br>
+        · 보유 기간: A/S 처리 완료 후 1년 보관 후 파기<br>
+        · 상담은 카카오톡 채널로 진행합니다.<br>
+        · 동의하지 않으실 수 있으나, 이 경우 온라인 A/S 접수가 어렵습니다.</div>
+        <label class="agree"><input type="checkbox" id="agree">위 내용에 동의합니다</label>
+      </div>
+      <input class="trap" id="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <button class="go" onclick="submitForm()">A/S 접수하기</button>
+      <div class="err" id="formErr"></div>
+      <div class="hint" style="text-align:center">당사 시공 이력 확인은 하루 5회까지 가능합니다.</div>
+    </div>
+  </section>
+
+  <!-- 확인 불가 -->
+  <section id="sNotFound" class="hide">
+    <div class="card"><div class="center">
+      <div class="ico" style="background:#F3F6FC"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#243A70" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></div>
+      <h2>시공 이력을 확인하지 못했습니다</h2>
+      <p>입력해 주신 정보로는 당사 시공 이력이 확인되지 않습니다.<br>당사에서 설치하지 않은 제품은 A/S를 도와드리기 어려운 점 너그러이 양해 부탁드립니다.</p>
+    </div></div>
+    <div class="card">
+      <div class="lbl" style="margin-bottom:6px">이런 부분을 한 번 더 확인해 주세요</div>
+      <ul class="tips"><li>설치 주소와 동·호가 맞는지</li><li>인테리어 업체 이름이 맞는지</li></ul>
+      <button class="ghost" onclick="show('sForm')">입력 내용 다시 확인하기</button>
+      <div class="hint" id="leftInfo" style="text-align:center"></div>
+    </div>
+    <p class="sec">당사에서 설치하셨나요?</p>
+    <div class="card">
+      <p class="note">당사에서 설치하셨는데 이 화면이 보이신다면 카카오톡으로 문의해 주세요. 확인 후 안내해 드리겠습니다.</p>
+      <a class="kk" href="#" onclick="return openKakao(false)"><svg width="20" height="20" viewBox="0 0 24 24"><path fill="#191919" d="M12 3.5C6.8 3.5 2.6 6.8 2.6 10.9c0 2.6 1.7 4.9 4.3 6.2l-1 3.6c-.1.3.3.6.6.4l4.2-2.8c.4 0 .9.1 1.3.1 5.2 0 9.4-3.3 9.4-7.5S17.2 3.5 12 3.5z"/></svg>카카오톡으로 문의하기</a>
+    </div>
+    <p class="sec">LG전자 고객센터</p>
+    <div class="card">
+      <p class="note">다른 곳에서 설치하신 LG전자 제품은 LG전자 고객센터에서 접수하실 수 있습니다.</p>
+      <div class="lg"><a href="tel:1544-7777"><small>가정용</small><b>1544-7777</b></a><a href="tel:1544-8777"><small>기업·상업용</small><b>1544-8777</b></a></div>
+    </div>
+  </section>
+
+  <!-- 접수 완료 -->
+  <section id="sDone" class="hide">
+    <div class="center" style="padding:6px 6px 12px">
+      <div class="ico" style="background:#ECFDF3"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#12B76A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+      <h2>A/S 접수가 완료되었습니다</h2>
+      <p>마지막으로 <b>카카오톡으로 접수번호를 보내 주세요.</b><br>담당자가 확인 후 카카오톡으로 답변드립니다.</p>
+    </div>
+    <div class="notice hide" id="offHours">지금은 영업시간(평일 09:00~17:00)이 아닙니다. 다음 영업일에 접수 순서대로 확인해 드리겠습니다.</div>
+    <div class="rc">
+      <div class="top"><small>접수번호</small><div class="no" id="rNo"></div></div>
+      <dl>
+        <div><dt>접수 일시</dt><dd id="rAt"></dd></div>
+        <div><dt>이름</dt><dd id="rName"></dd></div>
+        <div><dt>휴대폰</dt><dd id="rPhone"></dd></div>
+        <div><dt>설치 장소</dt><dd id="rPlace"></dd></div>
+        <div><dt>증상</dt><dd id="rSym"></dd></div>
+      </dl>
+      <div class="foot">개인정보 보호를 위해 일부 정보는 가려서 표시합니다.</div>
+    </div>
+    <div class="steps">
+      <div><span>1</span><p>아래 노란 버튼을 누르면 접수번호가 <b>자동으로 복사</b>되고 카카오톡 채팅방이 열립니다.</p></div>
+      <div><span>2</span><p>입력창을 <b>길게 눌러 붙여넣기</b> 후 전송해 주세요.</p></div>
+      <div><span>3</span><p>본인 확인을 위해 담당자가 <b>성함과 휴대폰 뒤 4자리</b>를 여쭤볼 수 있습니다.</p></div>
+    </div>
+    <a class="kk" href="#" onclick="return openKakao(true)"><svg width="20" height="20" viewBox="0 0 24 24"><path fill="#191919" d="M12 3.5C6.8 3.5 2.6 6.8 2.6 10.9c0 2.6 1.7 4.9 4.3 6.2l-1 3.6c-.1.3.3.6.6.4l4.2-2.8c.4 0 .9.1 1.3.1 5.2 0 9.4-3.3 9.4-7.5S17.2 3.5 12 3.5z"/></svg>접수번호 복사하고 카카오톡 열기</a>
+    <div class="copied" id="copied"></div>
+    <button class="ghost" onclick="saveReceipt()">접수증 이미지로 저장</button>
+  </section>
+
+  <!-- 진행 중 접수 -->
+  <section id="sOpen" class="hide">
+    <div class="card"><div class="center">
+      <div class="ico" style="background:#F3F6FC"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#243A70" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+      <h2>진행 중인 A/S 접수가 있습니다</h2>
+      <p>접수번호 <b id="oNo"></b><br><span id="oAt" style="font-size:13px;color:var(--sub)"></span></p>
+      <p style="font-size:13.5px">같은 계정으로는 기존 접수가 완료된 뒤 새로 접수하실 수 있습니다.<br>추가 증상이나 문의는 카카오톡으로 알려 주세요.</p>
+    </div></div>
+    <a class="kk" href="#" onclick="return openKakao(true)"><svg width="20" height="20" viewBox="0 0 24 24"><path fill="#191919" d="M12 3.5C6.8 3.5 2.6 6.8 2.6 10.9c0 2.6 1.7 4.9 4.3 6.2l-1 3.6c-.1.3.3.6.6.4l4.2-2.8c.4 0 .9.1 1.3.1 5.2 0 9.4-3.3 9.4-7.5S17.2 3.5 12 3.5z"/></svg>접수번호 복사하고 카카오톡 열기</a>
+    <div class="copied" id="copied2"></div>
+  </section>
+
+  <!-- 접수 중지 -->
+  <section id="sPaused" class="hide">
+    <div class="card"><div class="center">
+      <div class="ico" style="background:#FFF8E6"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#B7791F" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg></div>
+      <h2>A/S 온라인 접수 일시 중지</h2>
+      <p id="pausedMsg"></p>
+    </div></div>
+    <a class="kk" href="#" onclick="return openKakao(false)"><svg width="20" height="20" viewBox="0 0 24 24"><path fill="#191919" d="M12 3.5C6.8 3.5 2.6 6.8 2.6 10.9c0 2.6 1.7 4.9 4.3 6.2l-1 3.6c-.1.3.3.6.6.4l4.2-2.8c.4 0 .9.1 1.3.1 5.2 0 9.4-3.3 9.4-7.5S17.2 3.5 12 3.5z"/></svg>카카오톡으로 문의하기</a>
+  </section>
+
+  <p class="foot-info">(주)에이디이앤씨 · LG전자 시스템에어컨 인증점<br>A/S 상담은 카카오톡 채널로 진행됩니다.</p>
+</main>
+
+<div id="mPost" class="modal hide" onclick="if(event.target===this)closePost()">
+  <div class="sheet">
+    <div style="display:flex;align-items:center;margin-bottom:10px"><b style="flex:1;font-size:16px">주소 찾기</b><button class="btn2" onclick="closePost()">닫기</button></div>
+    <div id="postWrap"></div>
+  </div>
+</div>
+<div id="busy" class="hide"><div class="spin"></div><div id="busyMsg"></div></div>
+
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script>
+/* ═════════ 설정 ═════════ */
+const CONFIG = {
+  API_URL: 'https://script.google.com/macros/s/AKfycbzw9s5BuFBlr0BNDZ_ksivJure4V3iRY3bwqDEehn66iRNnnfN3IpyLZ87ZU9RHMrj7/exec',
+  KAKAO_REST_KEY: 'd083b0217df3566188e9a9cc6a563aa5',
+  REDIRECT: 'https://airdesign78.github.io/ade/as/',
+  KAKAO_CHAT: 'https://pf.kakao.com/_TKxfNn/chat',
+};
+const OPTIONS = {
+  symptoms: ['냉방이 안 돼요','난방이 안 돼요','소음·진동','물이 새요','에러코드가 떠요','기타'],
+  product: ['벽걸이','스탠드','천장형','잘 모르겠어요'],
+  period: ['1년 이내','1~2년','2년 이상','모름'],
+  visit: ['평일 오전','평일 오후','상관없음'],
+};
+/* ════════════════════════ */
+
+const DEMO = /[?&]demo/.test(location.search);
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const S = { route:'오늘의집', bname:'', photos:[], receiptNo:'', receipt:null };
+
+function show(id){
+  ['sLogin','sForm','sNotFound','sDone','sOpen','sPaused'].forEach(x => $('#'+x).classList.toggle('hide', x !== id));
+  window.scrollTo(0, 0);
+}
+function busy(on, msg){ $('#busy').classList.toggle('hide', !on); $('#busyMsg').textContent = msg || ''; }
+
+/* ───── 카카오 로그인 ───── */
+function kakaoLogin(){
+  if (DEMO) { saveSession('demo'); show('sForm'); return; }
+  const state = Array.from(crypto.getRandomValues(new Uint8Array(16)), b => b.toString(16).padStart(2,'0')).join('');
+  sessionStorage.setItem('as_state', state);
+  location.href = 'https://kauth.kakao.com/oauth/authorize?response_type=code' +
+    '&client_id=' + encodeURIComponent(CONFIG.KAKAO_REST_KEY) +
+    '&redirect_uri=' + encodeURIComponent(CONFIG.REDIRECT) +
+    '&state=' + state;
+}
+function saveSession(s){ sessionStorage.setItem('as_sess', JSON.stringify({ s, exp: Date.now() + 5.5 * 3600000 })); }
+function getSession(){
+  try { const v = JSON.parse(sessionStorage.getItem('as_sess') || 'null'); return v && v.exp > Date.now() ? v.s : null; } catch(e) { return null; }
+}
+function afterLogin(r){
+  if (r.paused) { $('#pausedMsg').textContent = r.paused; return show('sPaused'); }
+  if (r.open) return showOpen(r.open);
+  show('sForm');
+}
+function showOpen(o){
+  S.receiptNo = o.no;
+  $('#oNo').textContent = o.no; $('#oAt').textContent = o.at ? '접수 ' + o.at : '';
+  show('sOpen');
+}
+
+async function api(payload){
+  if (DEMO) return demoApi(payload);
+  const res = await fetch(CONFIG.API_URL, { method:'POST', body: JSON.stringify(payload) });
+  return res.json();
+}
+
+async function boot(){
+  const q = new URLSearchParams(location.search);
+  if (DEMO) { $('#demoBar').classList.remove('hide'); }
+  if (q.get('error')) { history.replaceState(null, '', location.pathname); show('sLogin'); $('#loginErr').textContent = '카카오 로그인이 취소되었습니다. 다시 시도해 주세요.'; return; }
+  const code = q.get('code');
+  if (code) {
+    history.replaceState(null, '', location.pathname);
+    if (q.get('state') !== sessionStorage.getItem('as_state')) { show('sLogin'); $('#loginErr').textContent = '로그인 확인에 실패했습니다. 다시 시도해 주세요.'; return; }
+    sessionStorage.removeItem('as_state');
+    busy(true, '로그인 확인 중…');
+    try {
+      const r = await api({ action:'asLogin', code });
+      if (!r.ok) { show('sLogin'); $('#loginErr').textContent = r.error || '로그인에 실패했습니다.'; return; }
+      saveSession(r.session); afterLogin(r);
+    } catch(e) { show('sLogin'); $('#loginErr').textContent = '연결에 실패했습니다. 인터넷 연결을 확인하고 다시 시도해 주세요.'; }
+    finally { busy(false); }
+    return;
+  }
+  if (getSession()) show('sForm'); else show('sLogin');
+}
+
+/* ───── 신청서 ───── */
+Object.keys(OPTIONS).forEach(k => {
+  $('#' + k).innerHTML = OPTIONS[k].map(v => `<button type="button" class="chip" data-v="${esc(v)}">${esc(v)}</button>`).join('');
+  $('#' + k).addEventListener('click', e => {
+    const b = e.target.closest('.chip'); if (!b) return;
+    if (k === 'symptoms') b.classList.toggle('on');
+    else { const was = b.classList.contains('on'); $('#' + k).querySelectorAll('.chip').forEach(c => c.classList.remove('on')); if (!was) b.classList.add('on'); }
+  });
+});
+const picked = k => Array.from($('#' + k).querySelectorAll('.chip.on')).map(b => b.dataset.v);
+
+$('#route').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  S.route = b.dataset.v;
+  $('#route').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+  const direct = S.route === '직접';
+  $('#partnerBox').classList.toggle('hide', direct);
+  $('#directBox').classList.toggle('hide', !direct);
+  $('#formRest').classList.toggle('hide', direct);
+});
+
+$('#phone').addEventListener('input', e => {
+  const d = e.target.value.replace(/\D/g, '').slice(0, 11);
+  e.target.value = d.length < 4 ? d : d.length < 8 ? d.slice(0,3) + '-' + d.slice(3) : d.slice(0,3) + '-' + d.slice(3, d.length - 4) + '-' + d.slice(-4);
+});
+
+function openPost(){
+  $('#mPost').classList.remove('hide');
+  const wrap = $('#postWrap'); wrap.innerHTML = '';
+  new daum.Postcode({
+    oncomplete: d => { $('#addr').value = d.roadAddress || d.address; S.bname = d.buildingName || ''; closePost(); },
+    width: '100%', height: '100%',
+  }).embed(wrap, { autoClose: false });
+}
+function closePost(){ $('#mPost').classList.add('hide'); }
+
+/* 사진: 휴대폰에서 줄여서 올림 (긴 변 1600px, 약 300KB) */
+function drawPhotos(){
+  const box = $('#photos');
+  box.innerHTML = S.photos.map((p, i) => `<div class="ph"><img src="${p}" alt="사진 ${i+1}"><button type="button" class="x" onclick="delPhoto(${i})" aria-label="사진 삭제">✕</button></div>`).join('') +
+    (S.photos.length < 3 ? `<div class="ph" onclick="$('#file').click()"><span style="font-size:20px">＋</span><span>사진 추가</span></div>` : '');
+}
+function delPhoto(i){ S.photos.splice(i, 1); drawPhotos(); }
+$('#file').addEventListener('change', async e => {
+  const files = Array.from(e.target.files || []).slice(0, 3 - S.photos.length);
+  e.target.value = '';
+  if (!files.length) return;
+  busy(true, '사진을 줄이는 중…');
+  for (const f of files) {
+    try { S.photos.push(await shrink(f)); } catch (err) { alertErr('사진을 불러오지 못했습니다. 다른 사진을 선택해 주세요.'); }
+  }
+  busy(false); drawPhotos();
+});
+function loadImg(file){
+  return new Promise((ok, no) => {
+    const url = URL.createObjectURL(file); const img = new Image();
+    img.onload = () => { URL.revokeObjectURL(url); ok(img); };
+    img.onerror = () => { URL.revokeObjectURL(url); no(new Error('img')); };
+    img.src = url;
+  });
+}
+async function shrink(file){
+  const img = await loadImg(file);
+  const enc = (max, q) => {
+    const s = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+    const c = document.createElement('canvas');
+    c.width = Math.round(img.naturalWidth * s); c.height = Math.round(img.naturalHeight * s);
+    const g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); g.drawImage(img, 0, 0, c.width, c.height);
+    return c.toDataURL('image/jpeg', q);
+  };
+  let d = enc(1600, 0.72);
+  if (d.length > 560000) d = enc(1280, 0.62);
+  if (d.length > 900000) d = enc(1024, 0.55);
+  return d;
+}
+drawPhotos();
+
+function alertErr(m){ $('#formErr').textContent = m; }
+
+async function submitForm(){
+  alertErr('');
+  const form = {
+    route: S.route, partner: $('#partner').value.trim(),
+    addr: $('#addr').value.trim(), bname: S.bname, dong: $('#dong').value.trim(), ho: $('#ho').value.trim(),
+    name: $('#name').value.trim(), phone: $('#phone').value.trim(),
+    symptoms: picked('symptoms'), code: $('#code').value.trim(), desc: $('#desc').value.trim(),
+    product: picked('product')[0] || '', period: picked('period')[0] || '', visit: picked('visit')[0] || '',
+    agree: $('#agree').checked,
+  };
+  if (!form.partner) return alertErr('인테리어 업체명을 입력해 주세요.');
+  if (!form.addr) return alertErr('[주소 찾기]로 설치 주소를 입력해 주세요.');
+  if (!form.name) return alertErr('이름을 입력해 주세요.');
+  if (!/^01\d{8,9}$/.test(form.phone.replace(/\D/g, ''))) return alertErr('휴대폰 번호를 다시 확인해 주세요.');
+  if (!form.symptoms.length) return alertErr('증상을 하나 이상 선택해 주세요.');
+  if (!form.agree) return alertErr('개인정보 수집·이용에 동의해 주세요.');
+  const session = getSession();
+  if (!session) { show('sLogin'); $('#loginErr').textContent = '로그인 시간이 지났습니다. 다시 로그인해 주세요.'; return; }
+  busy(true, '접수하는 중… 사진이 있으면 조금 걸릴 수 있습니다');
+  try {
+    const r = await api({ action:'asSubmit', session, form, photos: S.photos, website: $('#website').value });
+    if (r.ok) return showDone(r);
+    if (r.notFound) { $('#leftInfo').textContent = r.left > 0 ? `오늘 남은 확인 횟수: ${r.left}회` : '오늘 확인 횟수를 모두 사용하셨습니다.'; return show('sNotFound'); }
+    if (r.open) return showOpen(r.open);
+    if (r.paused) { $('#pausedMsg').textContent = r.paused; return show('sPaused'); }
+    if (/로그인 시간/.test(r.error || '')) { sessionStorage.removeItem('as_sess'); show('sLogin'); $('#loginErr').textContent = r.error; return; }
+    alertErr(r.error || '접수에 실패했습니다. 잠시 후 다시 시도해 주세요.');
+  } catch(e) {
+    alertErr('연결에 실패했습니다. 인터넷 연결을 확인하고 다시 시도해 주세요.');
+  } finally { busy(false); }
+}
+
+/* ───── 접수 완료 ───── */
+function showDone(r){
+  const c = r.receipt; S.receipt = c; S.receiptNo = c.no;
+  $('#rNo').textContent = c.no; $('#rAt').textContent = c.at; $('#rName').textContent = c.name;
+  $('#rPhone').textContent = c.phone; $('#rPlace').textContent = c.place; $('#rSym').textContent = c.symptom;
+  $('#offHours').classList.toggle('hide', !r.offHours);
+  show('sDone');
+}
+async function copyText(t){
+  try { await navigator.clipboard.writeText(t); return true; } catch(e) {
+    const ta = document.createElement('textarea'); ta.value = t; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select(); let ok = false; try { ok = document.execCommand('copy'); } catch(_) {}
+    ta.remove(); return ok;
+  }
+}
+function openKakao(withNo){
+  if (!withNo || !S.receiptNo) { location.href = CONFIG.KAKAO_CHAT; return false; }
+  const msg = `A/S 접수번호 ${S.receiptNo} 문의드립니다`;
+  copyText(msg).then(ok => {
+    const t = ok ? `✓ 「${msg}」 복사됨` : `복사가 안 되면 「${S.receiptNo}」를 직접 입력해 주세요`;
+    ['#copied','#copied2'].forEach(s => $(s).textContent = t);
+    setTimeout(() => { location.href = CONFIG.KAKAO_CHAT; }, 600);
+  });
+  return false;
+}
+async function saveReceipt(){
+  const c = S.receipt; if (!c) return;
+  try { await document.fonts.ready; } catch(e) {}
+  const W = 720, H = 820, cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+  const g = cv.getContext('2d'), F = 'Pretendard, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif';
+  g.fillStyle = '#fff'; g.fillRect(0, 0, W, H);
+  g.fillStyle = '#243A70'; g.fillRect(0, 0, W, 230);
+  g.textAlign = 'center'; g.fillStyle = '#C9D2E8'; g.font = `500 24px ${F}`; g.fillText('(주)에이디이앤씨 · A/S 접수증', W/2, 70);
+  g.fillStyle = '#C9D2E8'; g.font = `500 22px ${F}`; g.fillText('접수번호', W/2, 125);
+  g.fillStyle = '#fff'; g.font = `800 54px ${F}`; g.fillText(c.no, W/2, 190);
+  g.textAlign = 'left';
+  const rows = [['접수 일시', c.at], ['이름', c.name], ['휴대폰', c.phone], ['설치 장소', c.place], ['증상', c.symptom]];
+  let y = 300;
+  rows.forEach(([k, v]) => {
+    g.fillStyle = '#667085'; g.font = `500 26px ${F}`; g.fillText(k, 48, y);
+    g.fillStyle = '#1F2430'; g.font = `700 26px ${F}`;
+    const words = String(v).split(' '); let line = '', yy = y;
+    words.forEach(w => { const t = line ? line + ' ' + w : w; if (g.measureText(t).width > 470) { g.fillText(line, 200, yy); line = w; yy += 36; } else line = t; });
+    g.fillText(line, 200, yy);
+    y = yy + 30; g.fillStyle = '#F0F1F4'; g.fillRect(48, y - 6, W - 96, 2); y += 52;
+  });
+  g.fillStyle = '#6B7280'; g.font = `500 21px ${F}`;
+  g.fillText('카카오톡 채널로 접수번호를 보내 주시면 담당자가 답변드립니다.', 48, H - 70);
+  g.fillText('개인정보 보호를 위해 일부 정보는 가려서 표시합니다.', 48, H - 36);
+  cv.toBlob(async blob => {
+    const name = `접수증_${c.no}.png`;
+    const file = new File([blob], name, { type:'image/png' });
+    try {
+      if (navigator.canShare && navigator.canShare({ files:[file] })) { await navigator.share({ files:[file], title:'A/S 접수증' }); return; }
+    } catch(e) { if (e && e.name === 'AbortError') return; }
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    $('#copied').textContent = '저장이 안 되면 이 화면을 캡처해 주세요';
+  }, 'image/png');
+}
+
+/* ───── 데모 (?demo=1) — 서버 없이 화면 확인용 ───── */
+async function demoApi(p){
+  await new Promise(r => setTimeout(r, 400));
+  if (p.action === 'asSubmit') {
+    if (/없음|모름/.test(p.form.partner)) return { ok:false, notFound:true, left:3 };
+    const n = p.form.name;
+    return { ok:true, offHours: !/^1[0-6]$/.test(String(new Date().getHours())) || [0,6].includes(new Date().getDay()),
+      receipt:{ no:'AS-261125-007', at:'2026.11.25 14:32', name: n.length > 2 ? n[0] + '*'.repeat(n.length - 2) + n.slice(-1) : n[0] + '*',
+        phone:'***-****-' + p.form.phone.replace(/\D/g,'').slice(-4), place: (p.form.bname || p.form.addr.split(' ').slice(0,3).join(' ')) + (p.form.dong ? ' ' + p.form.dong + '동' : ''),
+        symptom: p.form.symptoms.map(x => x === '에러코드가 떠요' && p.form.code ? '에러코드 ' + p.form.code : x).join(' · ') } };
+  }
+  return { ok:false, error:'데모' };
+}
+
+boot();
+</script>
+</body>
+</html>
