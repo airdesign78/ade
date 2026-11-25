@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>우리동네 시공 · (주)에이디이앤씨</title>
+<meta name="description" content="LG전자 시스템에어컨 인증점 (주)에이디이앤씨의 시공 현장을 지도에서 확인하세요.">
+<meta property="og:title" content="우리동네 시공 · (주)에이디이앤씨">
+<meta property="og:description" content="우리 동네 LG 시스템에어컨 시공 현장을 지도에서 확인하세요.">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{--navy:#243A70;--wine:#A50034;--bg:#F4F5F7;--line:#DDE1E8;--txt:#1F2430;--sub:#667085}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;font-family:Pretendard,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;color:var(--txt);-webkit-text-size-adjust:100%}
+button,input{font:inherit;color:inherit}
+.hide{display:none!important}
+#wrap{position:fixed;inset:0;display:flex;flex-direction:column}
+header{background:var(--navy);color:#fff;padding:12px 16px 10px;z-index:5;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.hrow{display:flex;align-items:center;gap:10px;max-width:1200px;margin:0 auto}
+@media(max-width:600px){.wide{display:none}}
+.brand{white-space:nowrap;font-size:12px;color:#C9D2E8;line-height:1.2}
+.brand b{display:block;color:#fff;font-size:19px;font-weight:800;letter-spacing:-.3px;margin-top:2px}
+.count{white-space:nowrap;margin-left:auto;text-align:right;font-size:12px;color:#C9D2E8;line-height:1.25}
+.count b{color:#fff;font-size:20px;font-weight:800}
+.blog{background:var(--wine);color:#fff;text-decoration:none;font-weight:700;font-size:13px;border-radius:9px;padding:8px 11px;white-space:nowrap}
+.tools{max-width:1200px;margin:10px auto 0;display:flex;gap:8px;flex-wrap:wrap;position:relative}
+.search{flex:1;min-width:220px;position:relative}
+.search input{width:100%;border:none;border-radius:10px;padding:11px 14px 11px 38px;outline:none;background:#fff;color:var(--txt)}
+.search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%)}
+.results{position:absolute;left:0;right:0;top:100%;margin-top:6px;background:#fff;border-radius:12px;box-shadow:0 10px 30px rgba(16,24,40,.18);overflow:hidden;z-index:20;color:var(--txt)}
+.results div{padding:11px 14px;cursor:pointer;font-size:14px;border-bottom:1px solid #F0F1F4}
+.results div:last-child{border-bottom:none}
+.results div:hover,.results div.on{background:#EEF2FA}
+.results small{color:var(--sub);margin-left:6px}
+.results .none{color:var(--sub);cursor:default}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;border-radius:999px;padding:8px 12px;font-size:13px;cursor:pointer;white-space:nowrap}
+.chip.on{background:#fff;color:var(--navy);border-color:#fff;font-weight:700}
+#map{flex:1;position:relative;background:#E9EEF3}
+#msg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:var(--sub);font-size:14px;z-index:3;background:#F4F5F7;text-align:center;padding:24px}
+.spin{width:32px;height:32px;border:3px solid #D5DBE8;border-top-color:var(--navy);border-radius:50%;animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* 현장 카드 (아래에서 올라옴) */
+#card{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);width:calc(100% - 24px);max-width:440px;background:#fff;border-radius:16px;box-shadow:0 12px 40px rgba(16,24,40,.25);z-index:30;padding:18px 18px 16px;max-height:60vh;overflow:auto}
+#card .x{position:absolute;right:10px;top:10px;border:none;background:#F2F4F7;border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:16px;color:#475467}
+.site+.site{border-top:1px solid #EEF0F3;margin-top:14px;padding-top:14px}
+.site h3{margin:0 34px 4px 0;font-size:18px;color:var(--navy)}
+.site .rg{font-size:13px;color:var(--sub)}
+.site .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.tag{font-size:12px;background:#EEF2FA;color:var(--navy);border-radius:6px;padding:4px 8px;font-weight:600}
+.site a.go{display:block;margin-top:12px;background:var(--wine);color:#fff;text-align:center;text-decoration:none;font-weight:700;padding:12px;border-radius:10px}
+.site .nolink{margin-top:12px;font-size:12px;color:var(--sub);background:#F8F9FB;border-radius:10px;padding:10px 12px;text-align:center}
+.foot{font-size:11px;color:var(--sub);margin-top:12px;text-align:center}
+.notice{position:absolute;left:12px;bottom:12px;z-index:4;background:rgba(255,255,255,.92);border-radius:8px;padding:6px 10px;font-size:11px;color:var(--sub)}
+.cl{width:44px;height:44px;line-height:44px;border-radius:50%;background:rgba(36,58,112,.92);color:#fff;text-align:center;font-weight:800;font-size:14px;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <header>
+    <div class="hrow">
+      <div class="brand">(주)에이디이앤씨<span class="wide"> · LG전자 시스템에어컨 인증점</span><b>우리동네 시공</b></div>
+      <div class="count">시공현장<br><b id="cnt">-</b> 곳</div>
+      <a class="blog" href="https://blog.naver.com/air-design" target="_top">블로그</a>
+    </div>
+    <div class="tools">
+      <div class="search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#98A2B3" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input id="q" placeholder="단지명·지역 검색 (예: 송파, 래미안)" autocomplete="off">
+        <div id="results" class="results hide"></div>
+      </div>
+      <div class="chips" id="chips"></div>
+    </div>
+  </header>
+  <div id="map">
+    <div id="msg"><div class="spin"></div><div>시공 현장을 불러오는 중입니다…</div></div>
+    <div class="notice">고객 정보 보호를 위해 단지·건물명까지만 표시합니다</div>
+  </div>
+</div>
+<div id="card" class="hide"></div>
+
+<script>
+/* ═════════ 설정 ═════════ */
+const CONFIG = {
+  KAKAO_KEY: '84c75bb776bce7a6229e29cc8aeb24b3',
+  API_URL:   'https://script.google.com/macros/s/AKfycbzw9s5BuFBlr0BNDZ_ksivJure4V3iRY3bwqDEehn66iRNnnfN3IpyLZ87ZU9RHMrj7/exec',
+};
+/* ═══════════════════════ */
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let map, clusterer, groups = [], filter = '전체';
+
+const PIN = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" width="34" height="44" viewBox="0 0 34 44">' +
+  '<path d="M17 43s14-14.6 14-25.5C31 8.9 24.7 3 17 3S3 8.9 3 17.5C3 28.4 17 43 17 43z" fill="#A50034" stroke="#fff" stroke-width="3"/>' +
+  '<circle cx="17" cy="17.5" r="5.5" fill="#fff"/></svg>');
+
+function msg(html, spin){
+  $('#msg').innerHTML = (spin ? '<div class="spin"></div>' : '') + '<div>' + html + '</div>';
+  $('#msg').classList.remove('hide');
+}
+
+function loadKakao(){
+  return new Promise((ok, no) => {
+    const s = document.createElement('script');
+    s.src = 'https://dapi.kakao.com/v2/maps/sdk.js?autoload=false&libraries=services,clusterer&appkey=' + CONFIG.KAKAO_KEY;
+    s.onload = () => kakao.maps.load(ok);
+    s.onerror = () => no(new Error('kakao'));
+    document.head.appendChild(s);
+  });
+}
+
+async function start(){
+  try {
+    const [res] = await Promise.all([fetch(CONFIG.API_URL + '?action=map').then(r => r.json()), loadKakao()]);
+    if (!res.ok) throw new Error(res.error || 'data');
+    let sites = res.sites || [];
+
+    // 좌표가 아직 없는 곳은 지도에서 직접 주소로 찾기
+    const need = sites.filter(s => !s.lat && s.addr);
+    if (need.length) {
+      const geo = new kakao.maps.services.Geocoder();
+      await Promise.all(need.map(s => new Promise(r => geo.addressSearch(s.addr, (out, st) => {
+        if (st === kakao.maps.services.Status.OK && out[0]) { s.lat = +out[0].y; s.lng = +out[0].x; }
+        r();
+      }))));
+    }
+    sites = sites.filter(s => s.lat && s.lng);
+
+    // 같은 건물(같은 좌표)은 핀 하나로 묶기
+    const byKey = {};
+    sites.forEach(s => {
+      const k = s.lat.toFixed(5) + ',' + s.lng.toFixed(5);
+      (byKey[k] = byKey[k] || { lat: s.lat, lng: s.lng, sites: [] }).sites.push(s);
+    });
+    groups = Object.values(byKey);
+    groups.forEach(g => g.sites.sort((a, b) => String(b.date).localeCompare(String(a.date))));
+
+    map = new kakao.maps.Map($('#map'), { center: new kakao.maps.LatLng(37.5, 127.0), level: 9 });
+    map.addControl(new kakao.maps.ZoomControl(), kakao.maps.ControlPosition.RIGHT);
+    clusterer = new kakao.maps.MarkerClusterer({
+      map, averageCenter: true, minLevel: 7, disableClickZoom: false, gridSize: 70,
+      styles: [{ width:'44px', height:'44px', background:'rgba(36,58,112,.92)', borderRadius:'50%', color:'#fff',
+        textAlign:'center', fontWeight:'800', lineHeight:'38px', border:'3px solid #fff', boxShadow:'0 2px 8px rgba(0,0,0,.25)' }],
+    });
+    const img = new kakao.maps.MarkerImage(PIN, new kakao.maps.Size(34, 44), { offset: new kakao.maps.Point(17, 43) });
+    groups.forEach(g => {
+      g.pos = new kakao.maps.LatLng(g.lat, g.lng);
+      g.marker = new kakao.maps.Marker({ position: g.pos, image: img, title: g.sites[0].name });
+      kakao.maps.event.addListener(g.marker, 'click', () => openCard(g));
+    });
+    kakao.maps.event.addListener(map, 'click', closeCard);
+
+    buildChips(sites);
+    applyFilter(true);
+    $('#msg').classList.add('hide');
+  } catch (e) {
+    console.error(e);
+    msg('지도를 불러오지 못했습니다.<br>잠시 후 새로고침 해주세요.');
+  }
+}
+
+function buildChips(sites){
+  const types = [...new Set(sites.map(s => s.type).filter(Boolean))];
+  if (!types.length) return;
+  $('#chips').innerHTML = ['전체', ...types].map(t => `<button class="chip ${t === '전체' ? 'on' : ''}" data-t="${esc(t)}">${esc(t)}</button>`).join('');
+  $('#chips').addEventListener('click', e => {
+    const b = e.target.closest('.chip'); if (!b) return;
+    filter = b.dataset.t;
+    document.querySelectorAll('.chip').forEach(c => c.classList.toggle('on', c === b));
+    applyFilter(false);
+  });
+}
+
+function visible(g){ return filter === '전체' || g.sites.some(s => s.type === filter); }
+
+function applyFilter(fit){
+  closeCard();
+  const vis = groups.filter(visible);
+  clusterer.clear();
+  clusterer.addMarkers(vis.map(g => g.marker));
+  $('#cnt').textContent = vis.reduce((n, g) => n + g.sites.filter(s => filter === '전체' || s.type === filter).length, 0);
+  if (fit && vis.length) {
+    const b = new kakao.maps.LatLngBounds();
+    vis.forEach(g => b.extend(g.pos));
+    map.setBounds(b, 40, 40, 40, 40);
+  }
+}
+
+function openCard(g){
+  const list = g.sites.filter(s => filter === '전체' || s.type === filter);
+  $('#card').innerHTML = '<button class="x" onclick="closeCard()" aria-label="닫기">✕</button>' + list.map(s => {
+    const tags = [s.type, s.product, s.date && (s.date + ' 시공')].filter(Boolean).map(t => `<span class="tag">${esc(t)}</span>`).join('');
+    const go = /^https?:\/\//.test(s.blog)
+      ? `<a class="go" href="${esc(s.blog)}" target="_blank" rel="noopener">시공사례 보기 →</a>`
+      : '<div class="nolink">시공사례 글을 준비 중입니다</div>';
+    return `<div class="site"><h3>${esc(s.name)}</h3><div class="rg">${esc(s.region)}</div>${tags ? `<div class="tags">${tags}</div>` : ''}${go}</div>`;
+  }).join('') + '<div class="foot">LG전자 시스템에어컨 인증점 (주)에이디이앤씨</div>';
+  $('#card').classList.remove('hide');
+  map.panTo(g.pos);
+}
+function closeCard(){ $('#card').classList.add('hide'); }
+
+/* ───── 검색 ───── */
+let hits = [], hi = -1;
+const norm = s => String(s).replace(/\s+/g, '').toLowerCase();
+$('#q').addEventListener('input', () => {
+  const v = norm($('#q').value);
+  const box = $('#results');
+  if (!v || !groups.length) { box.classList.add('hide'); return; }
+  hits = [];
+  groups.filter(visible).forEach(g => g.sites.forEach(s => {
+    if (norm(s.name + s.region).includes(v)) hits.push({ g, s });
+  }));
+  hits = hits.slice(0, 8); hi = -1;
+  box.innerHTML = hits.length
+    ? hits.map((h, i) => `<div data-i="${i}">${esc(h.s.name)}<small>${esc(h.s.region)}</small></div>`).join('')
+    : '<div class="none">검색 결과가 없습니다</div>';
+  box.classList.remove('hide');
+});
+$('#q').addEventListener('keydown', e => {
+  if (!hits.length) return;
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+    e.preventDefault(); hi = Math.max(0, Math.min(hits.length - 1, hi + (e.key === 'ArrowDown' ? 1 : -1)));
+    document.querySelectorAll('#results [data-i]').forEach((el, i) => el.classList.toggle('on', i === hi));
+  } else if (e.key === 'Enter') { e.preventDefault(); pick(Math.max(0, hi)); }
+});
+$('#results').addEventListener('mousedown', e => { const el = e.target.closest('[data-i]'); if (el) { e.preventDefault(); pick(+el.dataset.i); } });
+$('#q').addEventListener('blur', () => setTimeout(() => $('#results').classList.add('hide'), 150));
+function pick(i){
+  const h = hits[i]; if (!h) return;
+  $('#results').classList.add('hide'); $('#q').blur();
+  map.setLevel(4); map.setCenter(h.g.pos);
+  openCard(h.g);
+}
+
+start();
+</script>
+</body>
+</html>
