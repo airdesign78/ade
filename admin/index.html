@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>에이디이앤씨 · 현장 입력</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{--navy:#243A70;--navy-d:#1a2b55;--wine:#A50034;--bg:#F4F5F7;--line:#DDE1E8;--txt:#1F2430;--sub:#667085;--ok:#1E6B2E;--okbg:#E3F1E4;--warn:#A05A00;--warnbg:#FCEBD8}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--txt);font-family:Pretendard,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;font-size:15px;-webkit-text-size-adjust:100%}
+button,input,select,textarea{font:inherit;color:inherit}
+.hide{display:none!important}
+
+/* 로그인 */
+#login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.login-card{background:#fff;border-radius:18px;padding:40px 32px;width:100%;max-width:400px;text-align:center;box-shadow:0 8px 30px rgba(36,58,112,.10)}
+.brand{font-weight:800;color:var(--navy);font-size:22px;letter-spacing:-.3px}
+.brand small{display:block;font-weight:500;color:var(--sub);font-size:13px;margin-top:4px;letter-spacing:0}
+.login-card h1{font-size:18px;margin:26px 0 6px}
+.login-card p{color:var(--sub);font-size:14px;margin:0 0 22px;line-height:1.5}
+#gbtn{display:flex;justify-content:center;min-height:44px}
+.login-msg{margin-top:16px;font-size:13px;color:var(--wine);min-height:18px;line-height:1.5}
+
+/* 상단 */
+header{background:var(--navy);color:#fff;position:sticky;top:0;z-index:20}
+.hbar{max-width:960px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:12px 16px}
+.hbar .brand{color:#fff;font-size:17px}
+.hbar .brand small{display:inline;color:#C9D2E8;margin-left:6px;font-size:12px}
+.who{margin-left:auto;font-size:12px;color:#C9D2E8;text-align:right;line-height:1.3}
+.who b{color:#fff;font-weight:600}
+.who .role{display:inline-block;background:var(--wine);color:#fff;border-radius:6px;padding:1px 6px;margin-left:4px;font-size:11px}
+.logout{background:transparent;border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:8px;padding:6px 10px;font-size:12px;cursor:pointer}
+nav{max-width:960px;margin:0 auto;display:flex;padding:0 8px}
+nav button{flex:1;background:none;border:none;color:#C9D2E8;padding:12px 8px;font-weight:600;cursor:pointer;border-bottom:3px solid transparent}
+nav button.on{color:#fff;border-bottom-color:#fff}
+
+main{max-width:960px;margin:0 auto;padding:18px 16px 80px}
+.card{background:#fff;border-radius:14px;padding:20px;box-shadow:0 1px 3px rgba(16,24,40,.06)}
+.sec{font-size:13px;font-weight:700;color:var(--navy);margin:22px 0 10px;display:flex;align-items:center;gap:8px}
+.sec:first-child{margin-top:0}
+.sec::after{content:"";flex:1;height:1px;background:var(--line)}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px 14px}
+.f{grid-column:span 12;position:relative}
+@media(min-width:720px){.s6{grid-column:span 6}.s4{grid-column:span 4}.s3{grid-column:span 3}.s8{grid-column:span 8}}
+.s2m{grid-column:span 6}@media(min-width:720px){.s2m{grid-column:span 2}}
+label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:#344054}
+label .req{color:var(--wine);margin-left:2px}
+label .hint{font-weight:400;color:var(--sub);font-size:12px;margin-left:6px}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px 12px;background:#fff;outline:none;transition:border-color .15s,box-shadow .15s}
+input:focus,select:focus,textarea:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(36,58,112,.12)}
+input[readonly]{background:#F8F9FB;color:#344054}
+textarea{min-height:70px;resize:vertical}
+.row{display:flex;gap:8px}
+.row input{flex:1}
+.btn{border:none;border-radius:10px;padding:11px 16px;font-weight:700;cursor:pointer;white-space:nowrap}
+.btn.navy{background:var(--navy);color:#fff}
+.btn.wine{background:var(--wine);color:#fff}
+.btn.ghost{background:#fff;border:1px solid var(--line);color:var(--navy)}
+.btn.sm{padding:7px 10px;font-size:12px;border-radius:8px}
+.btn:disabled{opacity:.5;cursor:default}
+.seg{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{flex:1;border:none;background:#fff;padding:11px 8px;cursor:pointer;font-weight:600;color:var(--sub)}
+.seg button.on{background:var(--navy);color:#fff}
+.seg button.on.n{background:#6B7280}
+.note{font-size:12px;color:var(--sub);margin-top:6px;line-height:1.45}
+.note.warn{color:var(--wine)}
+.actions{display:flex;gap:10px;justify-content:flex-end;margin-top:22px}
+
+/* 자동완성 */
+.ac{position:absolute;left:0;right:0;top:100%;margin-top:4px;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px rgba(16,24,40,.12);z-index:30;overflow:hidden}
+.ac div{padding:10px 12px;cursor:pointer;font-size:14px}
+.ac div.on,.ac div:hover{background:#EEF2FA}
+.ac mark{background:none;color:var(--wine);font-weight:700}
+.ac .new{color:var(--sub);font-size:12px;cursor:default;background:#FAFAFB}
+
+/* 목록 */
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.tools input{flex:1;min-width:200px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px;font-size:13px;cursor:pointer;color:#344054}
+.chip.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.count{font-size:12px;color:var(--sub);margin:0 0 8px 2px}
+.list{display:grid;gap:8px}
+.item{background:#fff;border-radius:12px;padding:14px 16px;display:grid;grid-template-columns:1fr auto;gap:4px 12px;cursor:pointer;border:1px solid transparent;box-shadow:0 1px 2px rgba(16,24,40,.05)}
+.item:hover{border-color:#C7D0E3}
+.item .t{font-weight:700;font-size:15px}
+.item .t .code{color:var(--sub);font-weight:600;font-size:12px;margin-right:6px}
+.item .m{font-size:13px;color:var(--sub);grid-column:1/2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item .b{grid-row:1/3;grid-column:2;display:flex;flex-direction:column;gap:4px;align-items:flex-end;justify-content:center}
+.badge{font-size:11px;font-weight:700;border-radius:6px;padding:3px 7px;white-space:nowrap}
+.badge.ok{background:var(--okbg);color:var(--ok)}
+.badge.off{background:#EEF0F3;color:#6B7280}
+.badge.warn{background:var(--warnbg);color:var(--warn)}
+.badge.blog{background:#EAF2FF;color:#1D4ED8}
+.badge.noblog{background:#FFF1F3;color:var(--wine)}
+.empty{text-align:center;color:var(--sub);padding:40px 0}
+
+/* 모달 */
+.modal{position:fixed;inset:0;background:rgba(16,24,40,.45);z-index:50;display:flex;align-items:flex-end;justify-content:center}
+@media(min-width:720px){.modal{align-items:center}}
+.sheet{background:#fff;width:100%;max-width:720px;max-height:92vh;overflow:auto;border-radius:18px 18px 0 0;padding:20px}
+@media(min-width:720px){.sheet{border-radius:18px}}
+.sheet h2{margin:0 0 4px;font-size:18px}
+.sheet .sub{color:var(--sub);font-size:13px;margin-bottom:14px}
+.lockrow{display:flex;gap:8px;align-items:center}
+.lockrow input{flex:1}
+.lockico{font-size:11px;color:var(--sub);margin-left:6px;font-weight:500}
+#postWrap{height:460px;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+
+/* 알림 */
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(30px);background:#1F2430;color:#fff;padding:12px 18px;border-radius:12px;font-size:14px;opacity:0;transition:.25s;z-index:80;max-width:90vw;text-align:center}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#toast.err{background:var(--wine)}
+#busy{position:fixed;inset:0;background:rgba(255,255,255,.55);z-index:70;display:flex;align-items:center;justify-content:center}
+.spin{width:34px;height:34px;border:3px solid #D5DBE8;border-top-color:var(--navy);border-radius:50%;animation:sp 0.8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.demo{background:#FFF7E6;color:#8A5A00;text-align:center;font-size:12px;padding:6px}
+</style>
+</head>
+<body>
+
+<!-- ───────── 로그인 ───────── -->
+<section id="login">
+  <div class="login-card">
+    <div class="brand">(주)에이디이앤씨<small>LG전자 시스템에어컨 인증점</small></div>
+    <h1>직원 전용 현장 입력</h1>
+    <p>회사에 등록된 구글 계정으로만 들어올 수 있습니다.</p>
+    <div id="gbtn"></div>
+    <div class="login-msg" id="loginMsg"></div>
+  </div>
+</section>
+
+<!-- ───────── 본 화면 ───────── -->
+<section id="app" class="hide">
+  <div id="demoBar" class="demo hide">데모 화면입니다 — 실제 장부에는 저장되지 않습니다</div>
+  <header>
+    <div class="hbar">
+      <div class="brand">에이디이앤씨<small>현장 입력</small></div>
+      <div class="who"><b id="whoName"></b><span class="role" id="whoRole"></span><br><span id="whoMail"></span></div>
+      <button class="logout" onclick="logout()">로그아웃</button>
+    </div>
+    <nav>
+      <button id="tabNew" class="on" onclick="tab('new')">신규 등록</button>
+      <button id="tabList" onclick="tab('list')">현장 목록</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- 신규 등록 -->
+    <div id="pNew" class="card">
+      <form id="fNew" autocomplete="off" onsubmit="return submitNew(event)">
+        <div class="sec">기본 정보</div>
+        <div class="grid">
+          <div class="f s4"><label>수주코드<span class="req">*</span></label><input name="수주코드" placeholder="예: 26T120" required></div>
+          <div class="f s4"><label>수주채널</label><input name="수주채널" list="dlChannels" placeholder="예: 오늘의집/LX"></div>
+          <div class="f s4"><label>발주처<span class="hint">인테리어 업체</span></label><input name="발주처" data-ac="buyers" placeholder="두 글자 이상 입력"></div>
+          <div class="f s8"><label>현장명(원본)<span class="req">*</span><span class="hint">동·호수 포함, 내부용</span></label><input name="현장명(원본)" placeholder="예: 래미안 하이리버 108동 1804호" required></div>
+          <div class="f s4"><label>계약금액<span class="hint">원</span></label><input name="계약금액" inputmode="numeric" placeholder="예: 6,171,000"></div>
+        </div>
+
+        <div class="sec">설치 주소</div>
+        <div class="grid">
+          <div class="f s8"><label>도로명주소<span class="req">*</span></label>
+            <div class="row"><input name="도로명주소" readonly placeholder="[주소 검색]을 누르세요" required><button type="button" class="btn navy" onclick="openPost(this)">주소 검색</button></div></div>
+          <div class="f s2m"><label>동</label><input name="동" placeholder="108"></div>
+          <div class="f s2m"><label>호</label><input name="호" placeholder="1804"></div>
+        </div>
+
+        <div class="sec">시공 내용</div>
+        <div class="grid">
+          <div class="f s3"><label>시공일</label><input type="date" name="시공일"></div>
+          <div class="f s3"><label>설치완료일<span class="hint">2년 보관 기준</span></label><input type="date" name="설치완료일"></div>
+          <div class="f s6"><label>시공유형</label><select name="시공유형" id="selTypes"><option value="">선택</option></select></div>
+          <div class="f s6"><label>설치제품</label><input name="설치제품" placeholder="예: 멀티V S 실외기 1대 · 실내기 4대"></div>
+          <div class="f s6"><label>블로그링크<span class="hint">나중에 추가 가능</span></label><input name="블로그링크" type="url" placeholder="https://blog.naver.com/air-design/…"></div>
+        </div>
+
+        <div class="sec">우리동네 시공 지도</div>
+        <div class="grid">
+          <div class="f s4"><label>지도에 공개</label>
+            <div class="seg" data-name="지도공개"><button type="button" data-v="Y" class="on">공개</button><button type="button" data-v="N" class="n">비공개</button></div>
+            <input type="hidden" name="지도공개" value="Y"></div>
+          <div class="f s8"><label>공개현장명<span class="req pubreq">*</span><span class="hint">단지·건물명까지만</span></label><input name="공개현장명" placeholder="예: 래미안 하이리버">
+            <div class="note">동·호수, 고객 이름은 넣지 마세요. 지도에는 이 이름과 도로명주소만 나갑니다.</div></div>
+          <div class="f"><label>내부메모</label><textarea name="내부메모" placeholder="사내에서만 보는 메모"></textarea></div>
+        </div>
+
+        <div class="actions">
+          <button type="reset" class="btn ghost" onclick="setTimeout(resetNew)">초기화</button>
+          <button type="submit" class="btn wine">등록하기</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- 현장 목록 -->
+    <div id="pList" class="hide">
+      <div class="tools"><input id="q" placeholder="수주코드 · 현장명 · 발주처 · 주소 검색" oninput="renderList()"></div>
+      <div class="chips" id="chips">
+        <button class="chip on" data-f="all">전체</button>
+        <button class="chip" data-f="noblog">블로그 링크 없음</button>
+        <button class="chip" data-f="hidden">지도 비공개</button>
+        <button class="chip" data-f="mine">내가 등록</button>
+      </div>
+      <div class="count" id="cnt"></div>
+      <div class="list" id="list"></div>
+    </div>
+  </main>
+</section>
+
+<!-- ───────── 수정 창 ───────── -->
+<div id="mEdit" class="modal hide" onclick="if(event.target===this)closeM('mEdit')">
+  <div class="sheet">
+    <h2 id="eTitle"></h2>
+    <div class="sub" id="eSub"></div>
+    <form id="fEdit" autocomplete="off" onsubmit="return submitEdit(event)">
+      <div class="grid" id="eGrid"></div>
+      <div class="actions">
+        <button type="button" class="btn ghost" onclick="closeM('mEdit')">닫기</button>
+        <button type="submit" class="btn navy">저장</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ───────── 수정 요청 창 ───────── -->
+<div id="mReq" class="modal hide" onclick="if(event.target===this)closeM('mReq')">
+  <div class="sheet" style="max-width:480px">
+    <h2>수정 요청</h2>
+    <div class="sub">핵심 항목은 관리자 승인 후 반영됩니다.</div>
+    <form id="fReq" autocomplete="off" onsubmit="return submitReq(event)">
+      <div class="grid">
+        <div class="f"><label>항목</label><input name="field" readonly></div>
+        <div class="f"><label>현재 값</label><input name="cur" readonly></div>
+        <div class="f"><label>바꿀 값<span class="req">*</span></label>
+          <div class="row"><input name="value" required><button type="button" id="rqAddr" class="btn navy hide" onclick="openPost(this)">주소 검색</button></div></div>
+        <div class="f"><label>사유<span class="req">*</span></label><input name="reason" required placeholder="예: 호수 오기 (1803 → 1804)"></div>
+      </div>
+      <div class="actions">
+        <button type="button" class="btn ghost" onclick="closeM('mReq')">취소</button>
+        <button type="submit" class="btn wine">요청 보내기</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ───────── 주소 검색 ───────── -->
+<div id="mPost" class="modal hide" onclick="if(event.target===this)closeM('mPost')">
+  <div class="sheet" style="max-width:560px">
+    <div style="display:flex;align-items:center;margin-bottom:10px"><h2 style="flex:1">주소 검색</h2><button class="btn ghost sm" onclick="closeM('mPost')">닫기</button></div>
+    <div id="postWrap"></div>
+  </div>
+</div>
+
+<datalist id="dlChannels"></datalist>
+<div id="busy" class="hide"><div class="spin"></div></div>
+<div id="toast"></div>
+
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script>
+/* ═════════ 설정 — 이 두 줄만 바꾸면 됩니다 ═════════ */
+const CONFIG = {
+  CLIENT_ID: '431904821493-g9pbhlv4r2g4npgtevcitahfhst5k6ig.apps.googleusercontent.com',
+  API_URL:   'https://script.google.com/macros/s/AKfycbzw9s5BuFBlr0BNDZ_ksivJure4V3iRY3bwqDEehn66iRNnnfN3IpyLZ87ZU9RHMrj7/exec',
+};
+/* ══════════════════════════════════════════════════ */
+
+const DEMO = /[?&]demo/.test(location.search);
+const LOCKED_DEFAULT = ['수주코드','발주처','계약금액','도로명주소','동','호'];
+const S = { token:null, user:null, buyers:[], channels:[], types:[], rows:[], locked:LOCKED_DEFAULT, filter:'all', editing:null };
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* ───── 로그인 ───── */
+function gisReady(){
+  if (DEMO) return;
+  google.accounts.id.initialize({ client_id: CONFIG.CLIENT_ID, callback: onCredential, auto_select: true, ux_mode: 'popup' });
+  google.accounts.id.renderButton($('#gbtn'), { theme:'outline', size:'large', text:'signin_with', shape:'pill', locale:'ko', width: 280 });
+  const saved = JSON.parse(sessionStorage.getItem('ade_tok') || 'null');
+  if (saved && saved.exp > Date.now() + 60000) { S.token = saved.t; start(); }
+}
+function onCredential(res){
+  try {
+    const p = JSON.parse(decodeURIComponent(escape(atob(res.credential.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')))));
+    sessionStorage.setItem('ade_tok', JSON.stringify({ t: res.credential, exp: p.exp * 1000 }));
+  } catch(e) {}
+  S.token = res.credential;
+  start();
+}
+async function start(){
+  $('#loginMsg').textContent = '';
+  const r = await api({ action:'init' }, true);
+  if (!r) return;
+  S.user = r.user; S.buyers = r.buyers || []; S.channels = r.channels || []; S.types = r.types || []; S.rows = r.rows || [];
+  if (r.locked) S.locked = r.locked;
+  $('#whoName').textContent = S.user.name; $('#whoMail').textContent = S.user.email; $('#whoRole').textContent = S.user.role;
+  $('#dlChannels').innerHTML = S.channels.map(c => `<option value="${esc(c)}">`).join('');
+  $('#selTypes').innerHTML = '<option value="">선택</option>' + S.types.map(t => `<option>${esc(t)}</option>`).join('');
+  $('#login').classList.add('hide'); $('#app').classList.remove('hide');
+  renderList();
+}
+function logout(){
+  sessionStorage.removeItem('ade_tok'); S.token = null;
+  if (window.google && google.accounts) google.accounts.id.disableAutoSelect();
+  location.href = location.pathname;
+}
+
+/* ───── 서버 통신 ───── */
+async function api(payload, quiet){
+  busy(true);
+  try {
+    let r;
+    if (DEMO) r = await demoApi(payload);
+    else {
+      const res = await fetch(CONFIG.API_URL, { method:'POST', body: JSON.stringify({ ...payload, idToken: S.token }) });
+      r = await res.json();
+    }
+    if (!r.ok) {
+      if (/로그인|등록되지 않은|허용되지/.test(r.error)) {
+        sessionStorage.removeItem('ade_tok');
+        $('#app').classList.add('hide'); $('#login').classList.remove('hide');
+        $('#loginMsg').textContent = r.error;
+      } else if (!quiet) toast(r.error, true);
+      else $('#loginMsg').textContent = r.error;
+      return null;
+    }
+    return r;
+  } catch (e) {
+    (quiet ? (m => $('#loginMsg').textContent = m) : (m => toast(m, true)))('연결에 실패했습니다. 인터넷 연결을 확인하고 다시 시도하세요.');
+    return null;
+  } finally { busy(false); }
+}
+
+/* ───── 탭 ───── */
+function tab(t){
+  $('#pNew').classList.toggle('hide', t !== 'new');
+  $('#pList').classList.toggle('hide', t !== 'list');
+  $('#tabNew').classList.toggle('on', t === 'new');
+  $('#tabList').classList.toggle('on', t === 'list');
+  if (t === 'list') renderList();
+  window.scrollTo(0, 0);
+}
+
+/* ───── 신규 등록 ───── */
+const fNew = $('#fNew');
+let pubTouched = false, dongTouched = false, hoTouched = false;
+fNew.elements['공개현장명'].addEventListener('input', () => pubTouched = true);
+fNew.elements['동'].addEventListener('input', () => dongTouched = true);
+fNew.elements['호'].addEventListener('input', () => hoTouched = true);
+fNew.elements['현장명(원본)'].addEventListener('input', e => {
+  const v = e.target.value, p = splitName(v);
+  if (!pubTouched) fNew.elements['공개현장명'].value = p.name;
+  if (!dongTouched) fNew.elements['동'].value = p.dong;
+  if (!hoTouched) fNew.elements['호'].value = p.ho;
+});
+fNew.elements['수주코드'].addEventListener('input', e => { e.target.value = e.target.value.toUpperCase().replace(/\s/g,''); });
+document.querySelectorAll('[name="계약금액"]').forEach(moneyInput);
+initSeg(fNew);
+
+function splitName(v){
+  let n = String(v || '').replace(/^\(LX\)\s*/, '').replace(/\s*A\/S\s*$/i, '').trim();
+  let dong = '', ho = '';
+  let m = n.match(/(\d+)-(\d+)\s*호?\s*$/);
+  if (m) { dong = m[1]; ho = m[2]; n = n.slice(0, m.index); }
+  else {
+    const d = n.match(/(\d+|[A-Za-z])\s*동(?=\s|$)/); if (d) dong = d[1].toUpperCase();
+    const h = n.match(/(\d+)\s*호/); if (h) ho = h[1];
+    n = n.replace(/\s*(\d+|[A-Za-z])\s*동(?=\s|$).*$/, '').replace(/\s*\d+\s*호.*$/, '');
+  }
+  return { name: n.trim(), dong, ho };
+}
+
+function resetNew(){
+  pubTouched = dongTouched = hoTouched = false;
+  setSeg(fNew, '지도공개', 'Y');
+}
+
+async function submitNew(e){
+  e.preventDefault();
+  const d = formData(fNew);
+  if (!d['도로명주소']) return toast('[주소 검색]으로 도로명주소를 넣어주세요.', true), false;
+  if (d['지도공개'] === 'Y' && !d['공개현장명']) return toast('지도에 공개하려면 공개현장명을 입력하세요.', true), false;
+  const r = await api({ action:'create', data:d });
+  if (!r) return false;
+  S.rows = r.rows;
+  if (d['발주처'] && !S.buyers.includes(d['발주처'])) S.buyers.push(d['발주처']);
+  fNew.reset(); resetNew();
+  toast(r.message);
+  tab('list');
+  return false;
+}
+
+/* ───── 목록 ───── */
+$('#chips').addEventListener('click', e => {
+  const b = e.target.closest('.chip'); if (!b) return;
+  S.filter = b.dataset.f;
+  document.querySelectorAll('.chip').forEach(c => c.classList.toggle('on', c === b));
+  renderList();
+});
+function renderList(){
+  const q = ($('#q').value || '').replace(/\s+/g,'').toLowerCase();
+  let rows = S.rows.filter(r => {
+    if (S.filter === 'noblog' && r['블로그링크']) return false;
+    if (S.filter === 'hidden' && r['지도상태'] === '지도 표시') return false;
+    if (S.filter === 'mine' && r['등록자'] !== (S.user && S.user.email)) return false;
+    if (!q) return true;
+    return ['수주코드','현장명(원본)','공개현장명','발주처','도로명주소'].some(k => String(r[k]||'').replace(/\s+/g,'').toLowerCase().includes(q));
+  });
+  $('#cnt').textContent = `${rows.length}건`;
+  if (!rows.length) { $('#list').innerHTML = '<div class="empty">조건에 맞는 현장이 없습니다.</div>'; return; }
+  $('#list').innerHTML = rows.slice(0, 300).map(r => {
+    const st = r['지도상태'] || '';
+    const sb = st === '지도 표시' ? '<span class="badge ok">지도 표시</span>' : st === '비공개' ? '<span class="badge off">비공개</span>' : `<span class="badge warn">${esc(st || '확인 필요')}</span>`;
+    const bb = r['블로그링크'] ? '<span class="badge blog">블로그 연결</span>' : '<span class="badge noblog">블로그 없음</span>';
+    const addr = String(r['도로명주소']||'').split(' ').slice(0,3).join(' ');
+    const meta = [r['발주처'], addr, r['시공일']].filter(Boolean).map(esc).join(' · ');
+    return `<div class="item" onclick="openEdit('${esc(r['수주코드'])}')">
+      <div class="t"><span class="code">${esc(r['수주코드'])}</span>${esc(r['공개현장명'] || r['현장명(원본)'])}</div>
+      <div class="b">${sb}${bb}</div>
+      <div class="m">${meta || '&nbsp;'}</div></div>`;
+  }).join('');
+}
+
+/* ───── 수정 ───── */
+const EDIT_LAYOUT = [
+  ['수주코드','s4'],['수주채널','s4'],['발주처','s4'],
+  ['현장명(원본)','s8'],['계약금액','s4'],
+  ['도로명주소','s6'],['동','s3'],['호','s3'],
+  ['시공일','s3'],['설치완료일','s3'],['시공유형','s6'],
+  ['설치제품','s6'],['블로그링크','s6'],
+  ['지도공개','s4'],['공개현장명','s8'],
+  ['내부메모','f'],
+];
+function openEdit(code){
+  const r = S.rows.find(x => x['수주코드'] === code); if (!r) return;
+  S.editing = r;
+  const admin = S.user.role === '관리';
+  $('#eTitle').textContent = `${r['수주코드']} · ${r['공개현장명'] || r['현장명(원본)']}`;
+  $('#eSub').innerHTML = `등록 ${esc(r['등록자'])} · ${esc(r['등록일시'] || '기존자료')}${r['수정일시'] ? ' · 최근 수정 ' + esc(r['수정일시']) : ''}`;
+  $('#eGrid').innerHTML = EDIT_LAYOUT.map(([k, cls]) => {
+    const v = r[k] ?? '';
+    const locked = S.locked.includes(k) && !admin;
+    const cl = cls === 'f' ? 'f' : `f ${cls}`;
+    let input;
+    if (k === '지도공개') {
+      input = `<div class="seg" data-name="지도공개"><button type="button" data-v="Y" class="${v==='Y'?'on':''}">공개</button><button type="button" data-v="N" class="n ${v!=='Y'?'on':''}">비공개</button></div><input type="hidden" name="지도공개" value="${v==='Y'?'Y':'N'}">`;
+    } else if (k === '시공유형') {
+      const opts = S.types.includes(v) || !v ? S.types : [v, ...S.types];
+      input = `<select name="${k}"><option value="">선택</option>${opts.map(t => `<option ${t===v?'selected':''}>${esc(t)}</option>`).join('')}</select>`;
+    } else if (k === '내부메모') {
+      input = `<textarea name="${k}">${esc(v)}</textarea>`;
+    } else {
+      const type = (k === '시공일' || k === '설치완료일') ? 'date' : k === '블로그링크' ? 'url' : 'text';
+      const shown = k === '계약금액' && v ? Number(v).toLocaleString('ko-KR') : v;
+      if (locked) {
+        input = `<div class="lockrow"><input value="${esc(shown)}" readonly><button type="button" class="btn ghost sm" onclick="openReq('${k}')">수정 요청</button></div>`;
+      } else if (k === '도로명주소') {
+        input = `<div class="row"><input name="${k}" value="${esc(v)}" readonly><button type="button" class="btn navy sm" onclick="openPost(this)">주소 검색</button></div>`;
+      } else {
+        input = `<input name="${k}" type="${type}" value="${esc(shown)}" ${k==='발주처'?'data-ac="buyers"':''} ${k==='계약금액'?'inputmode="numeric"':''}>`;
+      }
+    }
+    return `<div class="${cl}"><label>${k}${locked ? '<span class="lockico">관리자 승인 항목</span>' : ''}</label>${input}</div>`;
+  }).join('');
+  initSeg($('#fEdit'));
+  $('#fEdit').querySelectorAll('[name="계약금액"]').forEach(moneyInput);
+  $('#fEdit').querySelectorAll('[data-ac]').forEach(attachAC);
+  openM('mEdit');
+}
+async function submitEdit(e){
+  e.preventDefault();
+  const r = S.editing, d = formData($('#fEdit')), ch = {};
+  Object.keys(d).forEach(k => { if (String(d[k] ?? '') !== String(r[k] ?? '')) ch[k] = d[k]; });
+  if (!Object.keys(ch).length) { closeM('mEdit'); return false; }
+  if ((ch['지도공개'] ?? r['지도공개']) === 'Y' && !(ch['공개현장명'] ?? r['공개현장명'])) return toast('지도에 공개하려면 공개현장명을 입력하세요.', true), false;
+  const res = await api({ action:'update', code:r['수주코드'], data:ch });
+  if (!res) return false;
+  S.rows = res.rows; closeM('mEdit'); renderList(); toast(res.message);
+  return false;
+}
+
+/* ───── 수정 요청 ───── */
+function openReq(field){
+  const f = $('#fReq'), r = S.editing;
+  f.reset();
+  f.elements.field.value = field;
+  f.elements.cur.value = r[field] ?? '';
+  const isAddr = field === '도로명주소';
+  f.elements.value.readOnly = isAddr;
+  f.elements.value.placeholder = isAddr ? '[주소 검색]을 누르세요' : '';
+  $('#rqAddr').classList.toggle('hide', !isAddr);
+  openM('mReq');
+}
+async function submitReq(e){
+  e.preventDefault();
+  const f = $('#fReq');
+  const res = await api({ action:'request', code:S.editing['수주코드'], field:f.elements.field.value, value:f.elements.value.value, reason:f.elements.reason.value });
+  if (!res) return false;
+  closeM('mReq'); toast(res.message);
+  return false;
+}
+
+/* ───── 주소 검색 (다음 우편번호) ───── */
+let postTarget = null;
+function openPost(btn){
+  postTarget = btn.closest('.row').querySelector('input');
+  openM('mPost');
+  const wrap = $('#postWrap'); wrap.innerHTML = '';
+  new daum.Postcode({
+    oncomplete: d => { postTarget.value = d.roadAddress || d.address; closeM('mPost'); postTarget.dispatchEvent(new Event('input')); },
+    width: '100%', height: '100%',
+  }).embed(wrap, { autoClose: false });
+}
+
+/* ───── 발주처 자동완성 ───── */
+document.querySelectorAll('[data-ac]').forEach(attachAC);
+function attachAC(inp){
+  const box = document.createElement('div'); box.className = 'ac hide';
+  inp.parentNode.appendChild(box);
+  let items = [], idx = -1;
+  const norm = s => String(s).replace(/\s+/g,'').toLowerCase();
+  const draw = () => {
+    const v = inp.value.trim();
+    if (norm(v).length < 2) { box.classList.add('hide'); return; }
+    items = S.buyers.filter(b => norm(b).includes(norm(v))).slice(0, 8);
+    idx = -1;
+    const exact = S.buyers.some(b => norm(b) === norm(v));
+    box.innerHTML = items.map((b, i) => {
+      const k = b.toLowerCase().indexOf(v.toLowerCase());
+      const html = k >= 0 ? esc(b.slice(0,k)) + '<mark>' + esc(b.slice(k, k+v.length)) + '</mark>' + esc(b.slice(k+v.length)) : esc(b);
+      return `<div data-i="${i}">${html}</div>`;
+    }).join('') + (exact ? '' : `<div class="new">'${esc(v)}' — 새 발주처로 등록됩니다</div>`);
+    box.classList.remove('hide');
+  };
+  const pick = i => { if (items[i] != null) { inp.value = items[i]; box.classList.add('hide'); } };
+  inp.addEventListener('input', draw);
+  inp.addEventListener('focus', draw);
+  inp.addEventListener('blur', () => setTimeout(() => box.classList.add('hide'), 150));
+  inp.addEventListener('keydown', e => {
+    if (box.classList.contains('hide')) return;
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault(); idx = Math.max(0, Math.min(items.length - 1, idx + (e.key === 'ArrowDown' ? 1 : -1)));
+      box.querySelectorAll('[data-i]').forEach((el, i) => el.classList.toggle('on', i === idx));
+    } else if (e.key === 'Enter' && idx >= 0) { e.preventDefault(); pick(idx); }
+    else if (e.key === 'Escape') box.classList.add('hide');
+  });
+  box.addEventListener('mousedown', e => { const el = e.target.closest('[data-i]'); if (el) { e.preventDefault(); pick(+el.dataset.i); } });
+}
+
+/* ───── 공용 ───── */
+function initSeg(scope){
+  scope.querySelectorAll('.seg').forEach(seg => seg.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    setSeg(scope, seg.dataset.name, b.dataset.v);
+  }));
+}
+function setSeg(scope, name, v){
+  const seg = scope.querySelector(`.seg[data-name="${name}"]`);
+  seg.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.v === v));
+  scope.querySelector(`input[name="${name}"]`).value = v;
+  const req = scope.querySelector('.pubreq'); if (req) req.classList.toggle('hide', v !== 'Y');
+}
+function moneyInput(inp){
+  inp.addEventListener('input', () => {
+    const n = inp.value.replace(/[^\d]/g, '');
+    inp.value = n ? Number(n).toLocaleString('ko-KR') : '';
+  });
+}
+function formData(form){
+  const d = {};
+  form.querySelectorAll('[name]').forEach(el => { d[el.name] = el.value.trim(); });
+  if (d['계약금액'] !== undefined) d['계약금액'] = d['계약금액'].replace(/[^\d]/g, '');
+  return d;
+}
+function openM(id){ $('#' + id).classList.remove('hide'); document.body.style.overflow = 'hidden'; }
+function closeM(id){ $('#' + id).classList.add('hide'); if (!document.querySelector('.modal:not(.hide)')) document.body.style.overflow = ''; }
+function busy(on){ $('#busy').classList.toggle('hide', !on); }
+let tt;
+function toast(msg, err){
+  const t = $('#toast'); t.textContent = msg; t.classList.toggle('err', !!err); t.classList.add('show');
+  clearTimeout(tt); tt = setTimeout(() => t.classList.remove('show'), err ? 4200 : 2600);
+}
+
+/* ───── 데모 (?demo=1) — 서버 없이 화면 확인용 ───── */
+const DEMO_ROWS = [
+  {'수주코드':'26T070','수주채널':'오늘의집/LX','현장명(원본)':'래미안 하이리버 108동 1804호','발주처':'스테이즈','계약금액':'6171000','도로명주소':'서울특별시 성동구 금호로 107','동':'108','호':'1804','시공일':'2026-10-14','설치완료일':'2026-10-15','시공유형':'가정용 시스템에어컨','설치제품':'멀티V S 실내기 4대','블로그링크':'https://blog.naver.com/air-design','지도공개':'Y','공개현장명':'래미안 하이리버','내부메모':'','등록자':'기존자료 이관','등록일시':'','수정일시':'','지도상태':'지도 표시'},
+  {'수주코드':'26T071','수주채널':'오늘의집/LX','현장명(원본)':'한라프로방스 602동 503호','발주처':'공간담다','계약금액':'8320380','도로명주소':'경기도 용인시 수지구 죽전로 111','동':'602','호':'503','시공일':'','설치완료일':'','시공유형':'','설치제품':'','블로그링크':'','지도공개':'Y','공개현장명':'한라프로방스','내부메모':'','등록자':'기존자료 이관','등록일시':'','수정일시':'','지도상태':'지도 표시'},
+  {'수주코드':'26T079','수주채널':'오늘의집/LX','현장명(원본)':'다이너스티힐 아파트 301호','발주처':'루멘디자인','계약금액':'13138200','도로명주소':'서울특별시 서초구 동광로27길 66','동':'','호':'301','시공일':'','설치완료일':'','시공유형':'','설치제품':'','블로그링크':'','지도공개':'N','공개현장명':'다이너스티힐 아파트','내부메모':'빌라·단일 건물 추정','등록자':'기존자료 이관','등록일시':'','수정일시':'','지도상태':'비공개'},
+];
+async function demoApi(p){
+  await new Promise(r => setTimeout(r, 250));
+  if (p.action === 'init') return { ok:true, user:{ email:'staff@example.com', name:'김직원', role:'입력' },
+    buyers:['스테이즈','공간담다','루멘디자인','디자인트리','디자인 보그','디자인스튜디오','한샘리하우스'], channels:['오늘의집/LX'],
+    types:['가정용 시스템에어컨','상업용 시스템에어컨','환기','바스에어','기타'], rows:DEMO_ROWS };
+  if (p.action === 'create') {
+    if (DEMO_ROWS.some(r => r['수주코드'] === p.data['수주코드'])) return { ok:false, error:'이미 등록된 수주코드입니다: ' + p.data['수주코드'] };
+    DEMO_ROWS.unshift({ ...p.data, '등록자':'staff@example.com', '등록일시':'방금', '지도상태': p.data['지도공개']==='Y' ? '지도 표시' : '비공개' });
+    return { ok:true, message:p.data['수주코드'] + ' 등록 완료 (데모)', rows:DEMO_ROWS };
+  }
+  if (p.action === 'update') {
+    const r = DEMO_ROWS.find(x => x['수주코드'] === p.code); Object.assign(r, p.data, {'수정일시':'방금'});
+    r['지도상태'] = r['지도공개']==='Y' ? '지도 표시' : '비공개';
+    return { ok:true, message:p.code + ' 수정 완료 (데모)', rows:DEMO_ROWS };
+  }
+  if (p.action === 'request') return { ok:true, message:'수정 요청 접수 (데모) — 관리자 승인 후 반영됩니다.' };
+  return { ok:false, error:'알 수 없는 요청' };
+}
+if (DEMO) { $('#demoBar').classList.remove('hide'); start(); }
+else {
+  const g = document.createElement('script');
+  g.src = 'https://accounts.google.com/gsi/client'; g.async = true; g.onload = gisReady;
+  g.onerror = () => $('#loginMsg').textContent = '구글 로그인을 불러오지 못했습니다. 새로고침 해주세요.';
+  document.head.appendChild(g);
+}
+</script>
+</body>
+</html>
