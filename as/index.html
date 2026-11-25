@@ -99,17 +99,32 @@ textarea.in{height:76px;resize:none;font-size:15px}
 #busy{position:fixed;inset:0;background:rgba(255,255,255,.6);z-index:70;display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center;font-size:14px;color:#344054}
 .spin{width:34px;height:34px;border:3px solid #D5DBE8;border-top-color:var(--navy);border-radius:50%;animation:sp .8s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
+
+/* 회사 CI 줄 */
+.ci{background:#fff;border-bottom:1px solid #E7EAEF}
+.ci .cin{max-width:560px;margin:0 auto;display:flex;align-items:center;gap:10px;padding:8px 14px}
+.ci img{height:34px;width:auto;display:block}
+.ci .cert{margin-left:auto;font-size:11.5px;color:#4B5563;font-weight:600;text-align:right;line-height:1.35}
+.ci .cert b{display:block;color:#A50034;font-weight:700}
+.whobar{display:flex;align-items:center;gap:8px;background:#FEF9C3;border-radius:10px;padding:9px 12px;font-size:13px;color:#3F3A12;margin-bottom:10px}
+.whobar b{font-weight:700}
+.whobar button{margin-left:auto;border:none;background:none;color:#667085;font-size:12.5px;text-decoration:underline;cursor:pointer;padding:0;white-space:nowrap}
 .demo{background:#FFF7E6;color:#8A5A00;text-align:center;font-size:12px;padding:6px}
 </style>
 </head>
 <body>
 <div id="demoBar" class="demo hide">데모 화면입니다 — 실제로 접수되지 않습니다</div>
+<div class="ci"><div class="cin">
+  <a href="https://blog.naver.com/air-design" target="_top"><img src="../assets/logo.png" alt="(주)에이디이앤씨"></a>
+  <div class="cert"><b>LG전자</b>시스템에어컨 인증점</div>
+</div></div>
 <header><div class="hin">
-  <div><small>(주)에이디이앤씨 · LG전자 시스템에어컨 인증점</small><h1>A/S 접수</h1></div>
+  <div><small>당사 시공 현장 전용</small><h1>A/S 접수</h1></div>
   <a class="blog" href="https://blog.naver.com/air-design" target="_top">블로그</a>
 </div></header>
 
 <main>
+  <div class="whobar hide" id="whoBar"><span>카카오 로그인</span><b id="whoName"></b><button onclick="kakaoLogin(true)">다른 계정으로</button></div>
   <!-- 로그인 -->
   <section id="sLogin" class="hide">
     <div class="card login-card">
@@ -119,7 +134,7 @@ textarea.in{height:76px;resize:none;font-size:15px}
       <div class="flow"><span>① 카카오 로그인</span><span>② 신청서 작성</span><span>③ 카카오톡으로 접수번호 전송</span></div>
       <button class="kk" onclick="kakaoLogin()"><svg width="20" height="20" viewBox="0 0 24 24"><path fill="#191919" d="M12 3.5C6.8 3.5 2.6 6.8 2.6 10.9c0 2.6 1.7 4.9 4.3 6.2l-1 3.6c-.1.3.3.6.6.4l4.2-2.8c.4 0 .9.1 1.3.1 5.2 0 9.4-3.3 9.4-7.5S17.2 3.5 12 3.5z"/></svg>카카오로 시작하기</button>
       <div class="err" id="loginErr"></div>
-      <div class="small">카카오 로그인은 장난 접수를 막고 접수 기록을 관리하기 위한 것입니다.<br>카카오 회원번호 외의 정보는 저장하지 않습니다.</div>
+      <div class="small">카카오 로그인은 장난 접수를 막고 접수 기록을 관리하기 위한 것입니다.<br>카카오 회원번호 외의 정보는 저장하지 않습니다. (로그인한 계정은 화면 확인용으로만 가려서 표시)</div>
     </div>
   </section>
 
@@ -301,24 +316,28 @@ const S = { route:'오늘의집', bname:'', photos:[], receiptNo:'', receipt:nul
 
 function show(id){
   ['sLogin','sForm','sNotFound','sDone','sOpen','sPaused'].forEach(x => $('#'+x).classList.toggle('hide', x !== id));
+  const v = readSession();
+  $('#whoBar').classList.toggle('hide', id === 'sLogin' || !v);
+  $('#whoName').textContent = v && v.who ? v.who : '완료';
   window.scrollTo(0, 0);
 }
 function busy(on, msg){ $('#busy').classList.toggle('hide', !on); $('#busyMsg').textContent = msg || ''; }
 
 /* ───── 카카오 로그인 ───── */
-function kakaoLogin(){
-  if (DEMO) { saveSession('demo'); show('sForm'); return; }
+function kakaoLogin(other){
+  if (DEMO) { saveSession('demo', 'ab****@naver.com'); show('sForm'); return; }
   const state = Array.from(crypto.getRandomValues(new Uint8Array(16)), b => b.toString(16).padStart(2,'0')).join('');
   sessionStorage.setItem('as_state', state);
   location.href = 'https://kauth.kakao.com/oauth/authorize?response_type=code' +
     '&client_id=' + encodeURIComponent(CONFIG.KAKAO_REST_KEY) +
     '&redirect_uri=' + encodeURIComponent(CONFIG.REDIRECT) +
-    '&state=' + state;
+    '&state=' + state + (other === true ? '&prompt=login' : '');
 }
-function saveSession(s){ sessionStorage.setItem('as_sess', JSON.stringify({ s, exp: Date.now() + 5.5 * 3600000 })); }
-function getSession(){
-  try { const v = JSON.parse(sessionStorage.getItem('as_sess') || 'null'); return v && v.exp > Date.now() ? v.s : null; } catch(e) { return null; }
+function saveSession(s, who){ sessionStorage.setItem('as_sess', JSON.stringify({ s, who: who || '', exp: Date.now() + 5.5 * 3600000 })); }
+function readSession(){
+  try { const v = JSON.parse(sessionStorage.getItem('as_sess') || 'null'); return v && v.exp > Date.now() ? v : null; } catch(e) { return null; }
 }
+function getSession(){ const v = readSession(); return v ? v.s : null; }
 function afterLogin(r){
   if (r.paused) { $('#pausedMsg').textContent = r.paused; return show('sPaused'); }
   if (r.open) return showOpen(r.open);
@@ -349,7 +368,7 @@ async function boot(){
     try {
       const r = await api({ action:'asLogin', code });
       if (!r.ok) { show('sLogin'); $('#loginErr').textContent = r.error || '로그인에 실패했습니다.'; return; }
-      saveSession(r.session); afterLogin(r);
+      saveSession(r.session, r.who); afterLogin(r);
     } catch(e) { show('sLogin'); $('#loginErr').textContent = '연결에 실패했습니다. 인터넷 연결을 확인하고 다시 시도해 주세요.'; }
     finally { busy(false); }
     return;

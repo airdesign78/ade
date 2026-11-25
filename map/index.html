@@ -15,6 +15,13 @@ html,body{margin:0;height:100%;font-family:Pretendard,-apple-system,"Apple SD Go
 button,input{font:inherit;color:inherit}
 .hide{display:none!important}
 #wrap{position:fixed;inset:0;display:flex;flex-direction:column}
+
+/* 회사 CI 줄 */
+.ci{background:#fff;border-bottom:1px solid #E7EAEF}
+.ci .cin{max-width:none;margin:0 auto;display:flex;align-items:center;gap:10px;padding:8px 14px}
+.ci img{height:34px;width:auto;display:block}
+.ci .cert{margin-left:auto;font-size:11.5px;color:#4B5563;font-weight:600;text-align:right;line-height:1.35}
+.ci .cert b{display:block;color:#A50034;font-weight:700}
 header{background:var(--navy);color:#fff;padding:12px 16px 10px;z-index:5;box-shadow:0 2px 8px rgba(0,0,0,.12)}
 .hrow{display:flex;align-items:center;gap:10px;max-width:1200px;margin:0 auto}
 @media(max-width:600px){.wide{display:none}}
@@ -58,9 +65,13 @@ header{background:var(--navy);color:#fff;padding:12px 16px 10px;z-index:5;box-sh
 </head>
 <body>
 <div id="wrap">
+<div class="ci" style="position:relative;z-index:6"><div class="cin">
+  <a href="https://blog.naver.com/air-design" target="_top"><img src="../assets/logo.png" alt="(주)에이디이앤씨"></a>
+  <div class="cert"><b>LG전자</b>시스템에어컨 인증점</div>
+</div></div>
   <header>
     <div class="hrow">
-      <div class="brand">(주)에이디이앤씨<span class="wide"> · LG전자 시스템에어컨 인증점</span><b>우리동네 시공</b></div>
+      <div class="brand">당사 시공 현장 지도<b>우리동네 시공</b></div>
       <div class="count">시공현장<br><b id="cnt">-</b> 곳</div>
       <a class="blog" href="https://blog.naver.com/air-design" target="_top">블로그</a>
     </div>
